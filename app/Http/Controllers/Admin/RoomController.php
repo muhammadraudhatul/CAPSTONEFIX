@@ -1,0 +1,152 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Room;
+use App\Models\RoomSchedule;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+
+class RoomController extends Controller
+{
+    private $days = [
+        'Senin',
+        'Selasa',
+        'Rabu',
+        'Kamis',
+        'Jumat',
+    ];
+
+    private $timeSlots = [
+        '07:30 - 08:30',
+        '08:30 - 09:30',
+        '09:30 - 10:30',
+        '10:30 - 11:30',
+        '11:30 - 12:30',
+        '13:30 - 14:30',
+        '14:30 - 15:30',
+        '15:30 - 16:30',
+    ];
+
+    public function index(Request $request)
+    {
+        $rooms = Room::with('schedules')->get();
+
+        $weeks = [];
+
+        $start = Carbon::now()->startOfWeek(Carbon::MONDAY);
+
+        for ($i = 0; $i < 12; $i++) {
+
+            $weekStart = $start->copy()->addWeeks($i);
+
+            $weekEnd = $weekStart->copy()->addDays(6);
+
+            $weeks[] = [
+                'value' => $weekStart->format('Y-m-d'),
+                'label' =>
+                    $weekStart->format('d M') .
+                    ' - ' .
+                    $weekEnd->format('d M'),
+            ];
+        }
+
+        $selectedWeek =
+            $request->week ??
+            $weeks[0]['value'];
+
+        return view('admin.rooms.index', [
+            'rooms' => $rooms,
+            'days' => $this->days,
+            'timeSlots' => $this->timeSlots,
+            'weeks' => $weeks,
+            'selectedWeek' => $selectedWeek,
+        ]);
+    }
+
+    public function create()
+    {
+        return view('admin.rooms.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'capacity' => 'required|integer|min:1',
+        ]);
+
+        $room = Room::create([
+            'name' => $request->name,
+            'capacity' => $request->capacity,
+        ]);
+
+        $start = Carbon::now()->startOfWeek(Carbon::MONDAY);
+
+        for ($week = 0; $week < 52; $week++) {
+
+            $weekStart = $start
+                ->copy()
+                ->addWeeks($week);
+
+            $weekStartStr = $weekStart->format('Y-m-d');
+
+            foreach ($this->days as $day) {
+
+                foreach ($this->timeSlots as $slot) {
+
+                    RoomSchedule::create([
+                        'room_id' => $room->id,
+                        'week_start' => $weekStartStr,
+                        'day' => $day,
+                        'time_slot' => $slot,
+                        'available' => true,
+                    ]);
+                }
+            }
+        }
+
+        return redirect()
+            ->route('rooms.index');
+    }
+
+    public function edit(Room $room)
+    {
+        return view('admin.rooms.edit', compact('room'));
+    }
+
+    public function update(Request $request, Room $room)
+    {
+        $request->validate([
+            'name' => 'required',
+            'capacity' => 'required',
+        ]);
+
+        $room->update([
+            'name' => $request->name,
+            'capacity' => $request->capacity,
+        ]);
+
+        return redirect()
+            ->route('rooms.index');
+    }
+
+    public function destroy(Room $room)
+    {
+        $room->delete();
+
+        return back();
+    }
+
+    public function toggleSchedule(RoomSchedule $schedule)
+    {
+        $schedule->update([
+        'available' => !$schedule->available
+        ]);
+
+    return response()->json([
+        'available' => $schedule->fresh()->available
+        ]);
+    }
+}

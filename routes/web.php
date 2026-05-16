@@ -10,6 +10,7 @@ use App\Http\Controllers\Student\DashboardController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\ItemController;
+use App\Http\Controllers\Admin\ItemHistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,9 +98,33 @@ Route::middleware('auth')
     |--------------------------------------------------------------------------
     */
 
-    Route::resource('rooms', RoomController::class);
+    Route::resource(
+        'rooms',
+        RoomController::class
+    );
 
-    Route::resource('items', ItemController::class);
+    /*
+    |--------------------------------------------------------------------------
+    | ITEMS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource(
+        'items',
+        ItemController::class
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | ITEM HISTORIES
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/item-histories',
+        [ItemHistoryController::class, 'index']
+    )->name('item-histories.index');
+
     /*
     |--------------------------------------------------------------------------
     | TOGGLE SCHEDULE

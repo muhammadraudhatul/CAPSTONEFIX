@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\ItemHistoryController;
+use App\Http\Controllers\Admin\AnalyticsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -135,6 +136,21 @@ Route::middleware('auth')
         '/room-schedules/{schedule}/toggle',
         [RoomController::class, 'toggleSchedule']
     )->name('room-schedules.toggle');
+
+    /*
+    |--------------------------------------------------------------------------
+    | ANALYTICS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/analytics/items', 
+        [AnalyticsController::class, 'alatBahan']
+    )->name('admin.analytics.items');
+    Route::get(
+        '/analytics/rooms', 
+        [AnalyticsController::class, 'ruangan']
+    )->name('admin.analytics.rooms');
 
 });
 

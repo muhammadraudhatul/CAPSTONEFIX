@@ -36,4 +36,32 @@
     <h2 class="text-3xl font-bold text-gray-800 mb-6">Okupansi: {{ $selected_room->name ?? 'Pilih Ruangan' }}</h2>
     <canvas id="roomChart" class="w-full h-80"></canvas>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx = document.getElementById('roomChart');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: @json($chartLabels),
+        datasets: [{
+            label: 'Penggunaan Ruangan',
+            data: @json($chartData),
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+</script>
 @endsection

@@ -208,7 +208,7 @@
                                 <div class="mb-2">
 
                                     •
-                                    {{ $item->item->name }}
+                                    {{ $item->item->name ?? '-' }}
 
                                     ({{ $item->qty }})
 

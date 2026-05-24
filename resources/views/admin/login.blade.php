@@ -74,21 +74,7 @@
 
         </form>
 
-        <div class="mt-8 bg-gray-50 rounded-2xl p-5 text-center text-gray-700">
 
-            <p class="text-sm text-gray-500">
-                Demo Credentials:
-            </p>
-
-            <p class="mt-2">
-                <strong>Username:</strong> admin
-            </p>
-
-            <p>
-                <strong>Password:</strong> admin123
-            </p>
-
-        </div>
 
     </div>
 

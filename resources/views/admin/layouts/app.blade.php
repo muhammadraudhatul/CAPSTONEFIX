@@ -77,7 +77,7 @@
                 </a>
 
                 <!-- Peminjaman -->
-                <a href="#"
+                <a href="{{ route('admin.borrowings.index') }}"
                    class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 font-medium">
                     <i class="ti ti-clipboard-list text-lg"></i>
                     Peminjaman

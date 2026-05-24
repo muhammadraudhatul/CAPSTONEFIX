@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ItemHistory;
+use App\Exports\ItemHistoriesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ItemHistoryController extends Controller
 {
@@ -17,4 +19,21 @@ class ItemHistoryController extends Controller
             compact('histories')
         );
     }
+    
+    public function exportExcel()
+    {
+        return Excel::download(
+            new ItemHistoriesExport,
+            'inventory-history.xlsx'
+        );
+    }
+
+    public function exportCsv()
+    {
+        return Excel::download(
+            new ItemHistoriesExport,
+            'inventory-history.csv'
+        );
+    }
+
 }

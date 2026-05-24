@@ -6,12 +6,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 
 use App\Http\Controllers\Student\DashboardController;
+use App\Http\Controllers\Student\BorrowingController;
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\ItemHistoryController;
 use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\BorrowingController as AdminBorrowingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +70,22 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile',
         [ProfileController::class, 'destroy']
     )->name('profile.destroy');
+
+    Route::get('/student/borrowings/create',
+        [BorrowingController::class, 'create']
+    )->name('student.borrowings.create');
+
+    Route::post('/student/borrowings',
+        [BorrowingController::class, 'store']
+    )->name('student.borrowings.store');
+
+    Route::get('/student/available-schedules',
+        [BorrowingController::class, 'availableSchedules']
+    );
+
+    Route::patch('/student/borrowings/{borrowing}/finish',
+        [BorrowingController::class, 'finish']
+    )->name('student.borrowings.finish');
 
 });
 
@@ -126,6 +144,16 @@ Route::middleware('auth')
         [ItemHistoryController::class, 'index']
     )->name('item-histories.index');
 
+    Route::get(
+        '/item-histories/export/excel',
+        [ItemHistoryController::class, 'exportExcel']
+    )->name('item-histories.export.excel');
+
+    Route::get(
+        '/item-histories/export/csv',
+        [ItemHistoryController::class, 'exportCsv']
+    )->name('item-histories.export.csv');
+
     /*
     |--------------------------------------------------------------------------
     | TOGGLE SCHEDULE
@@ -151,6 +179,32 @@ Route::middleware('auth')
         '/analytics/rooms', 
         [AnalyticsController::class, 'ruangan']
     )->name('admin.analytics.rooms');
+
+    /*
+    |--------------------------------------------------------------------------
+    | BORROWINGS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/borrowings',
+        [AdminBorrowingController::class, 'index']
+    )->name('admin.borrowings.index');
+
+    Route::patch(
+        '/borrowings/{borrowing}/approve',
+        [AdminBorrowingController::class, 'approve']
+    )->name('admin.borrowings.approve');
+
+    Route::patch(
+        '/borrowings/{borrowing}/reject',
+        [AdminBorrowingController::class, 'reject']
+    )->name('admin.borrowings.reject');
+
+    Route::patch(
+        '/borrowings/{borrowing}/complete',
+        [AdminBorrowingController::class, 'complete']
+    )->name('admin.borrowings.complete');
 
 });
 

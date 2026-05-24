@@ -13,32 +13,42 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('user_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignId('room_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
             $table->date('borrow_date');
 
-            $table->string('room');
+            $table->string('day');
 
             $table->string('time_slot');
 
             $table->text('purpose');
 
-            $table->integer('participants');
+            $table->integer('total_people');
 
             $table->boolean('with_lecturer')
-                  ->default(false);
+                ->default(false);
 
             $table->string('lecturer_name')
-                  ->nullable();
+                ->nullable();
 
             $table->enum('status', [
-                'pending',
-                'approved',
-                'rejected',
-                'completed'
-            ])->default('pending');
 
+                'PENDING',
+                'APPROVED',
+                'WAITING_RETURN',
+                'COMPLETED',
+                'REJECTED',
+
+            ])->default('PENDING');
+
+            $table->timestamp('returned_at')
+                ->nullable();
+                
             $table->timestamps();
 
         });

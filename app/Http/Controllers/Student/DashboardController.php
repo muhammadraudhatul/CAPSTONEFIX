@@ -39,6 +39,7 @@ class DashboardController extends Controller
 
                 'COMPLETED',
                 'REJECTED',
+                'CANCELLED',
 
             ])
             ->latest()

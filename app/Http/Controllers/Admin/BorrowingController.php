@@ -5,11 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Borrowing;
 use App\Models\Item;
+use App\Models\ItemHistory;
 use App\Models\RoomSchedule;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class BorrowingController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | INDEX
+    |--------------------------------------------------------------------------
+    */
+
     public function index()
     {
         $borrowings = Borrowing::with([
@@ -36,30 +44,21 @@ class BorrowingController extends Controller
 
     public function approve(Borrowing $borrowing)
     {
-        if ($borrowing->status != 'PENDING') {
+        /*
+        |--------------------------------------------------------------------------
+        | ONLY PENDING
+        |--------------------------------------------------------------------------
+        */
 
+        if (
+            $borrowing->status != 'PENDING'
+        ) {
             return back();
         }
 
         /*
         |--------------------------------------------------------------------------
-        | REDUCE STOCK
-        |--------------------------------------------------------------------------
-        */
-
-        foreach ($borrowing->items as $borrowedItem) {
-
-            $item = $borrowedItem->item;
-
-            $item->decrement(
-                'stock',
-                $borrowedItem->qty
-            );
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | LOCK ROOM SCHEDULE
+        | VALIDATE ROOM
         |--------------------------------------------------------------------------
         */
 
@@ -72,7 +71,7 @@ class BorrowingController extends Controller
             ->startOfWeek(Carbon::MONDAY)
             ->format('Y-m-d');
 
-        RoomSchedule::where(
+        $schedule = RoomSchedule::where(
                 'room_id',
                 $borrowing->room_id
             )
@@ -88,21 +87,161 @@ class BorrowingController extends Controller
                 'time_slot',
                 $borrowing->time_slot
             )
-            ->update([
-                'available' => false
-            ]);
+            ->where(
+                'available',
+                true
+            )
+            ->first();
+
+        if (!$schedule)
+        {
+            return back()
+                ->withErrors([
+
+                    'room' =>
+                        'Ruangan sudah tidak tersedia.'
+
+                ]);
+        }
 
         /*
         |--------------------------------------------------------------------------
-        | UPDATE STATUS
+        | TRANSACTION
         |--------------------------------------------------------------------------
         */
 
-        $borrowing->update([
+        DB::transaction(function () use (
+            $borrowing,
+            $weekStart
+        ) {
 
-            'status' => 'APPROVED',
+            /*
+            |--------------------------------------------------------------------------
+            | REDUCE STOCK
+            |--------------------------------------------------------------------------
+            */
 
-        ]);
+            foreach (
+                $borrowing->items as $borrowedItem
+            ) {
+
+                $item =
+                    $borrowedItem->item;
+
+                /*
+                |--------------------------------------------------------------------------
+                | VALIDATE STOCK
+                |--------------------------------------------------------------------------
+                */
+
+                if (
+                    $borrowedItem->qty >
+                    $item->stock
+                ) {
+                    abort(
+                        400,
+                        'Stock item tidak cukup.'
+                    );
+                }
+
+                $oldStock =
+                    $item->stock;
+
+                /*
+                |--------------------------------------------------------------------------
+                | REDUCE STOCK
+                |--------------------------------------------------------------------------
+                */
+
+                Item::withoutEvents(function () use (
+                    $item,
+                    $borrowedItem
+                ) {
+
+                    $item->decrement(
+
+                        'stock',
+
+                        $borrowedItem->qty
+
+                    );
+
+                });
+
+                $item->refresh();
+
+                /*
+                |--------------------------------------------------------------------------
+                | HISTORY
+                |--------------------------------------------------------------------------
+                */
+
+                ItemHistory::create([
+
+                    'item_id' =>
+                        $item->id,
+
+                    'user_id' =>
+                        auth()->id(),
+
+                    'action' =>
+                        'borrow',
+
+                    'item_name' =>
+                        $item->name,
+
+                    'old_stock' =>
+                        $oldStock,
+
+                    'new_stock' =>
+                        $item->stock,
+
+                    'description' =>
+                        'Dipinjam mahasiswa',
+
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | LOCK ROOM
+            |--------------------------------------------------------------------------
+            */
+
+            RoomSchedule::where(
+                    'room_id',
+                    $borrowing->room_id
+                )
+                ->where(
+                    'week_start',
+                    $weekStart
+                )
+                ->where(
+                    'day',
+                    $borrowing->day
+                )
+                ->where(
+                    'time_slot',
+                    $borrowing->time_slot
+                )
+                ->update([
+
+                    'available' => false
+
+                ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | UPDATE STATUS
+            |--------------------------------------------------------------------------
+            */
+
+            $borrowing->update([
+
+                'status' => 'APPROVED',
+
+            ]);
+        });
 
         return back();
     }
@@ -115,6 +254,18 @@ class BorrowingController extends Controller
 
     public function reject(Borrowing $borrowing)
     {
+        /*
+        |--------------------------------------------------------------------------
+        | ONLY PENDING
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $borrowing->status != 'PENDING'
+        ) {
+            return back();
+        }
+
         $borrowing->update([
 
             'status' => 'REJECTED',
@@ -132,6 +283,12 @@ class BorrowingController extends Controller
 
     public function complete(Borrowing $borrowing)
     {
+        /*
+        |--------------------------------------------------------------------------
+        | ONLY WAITING RETURN
+        |--------------------------------------------------------------------------
+        */
+
         if (
             $borrowing->status != 'WAITING_RETURN'
         ) {
@@ -140,23 +297,7 @@ class BorrowingController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | RETURN STOCK
-        |--------------------------------------------------------------------------
-        */
-
-        foreach ($borrowing->items as $borrowedItem) {
-
-            $item = $borrowedItem->item;
-
-            $item->increment(
-                'stock',
-                $borrowedItem->qty
-            );
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | UNLOCK ROOM
+        | DATE
         |--------------------------------------------------------------------------
         */
 
@@ -169,39 +310,130 @@ class BorrowingController extends Controller
             ->startOfWeek(Carbon::MONDAY)
             ->format('Y-m-d');
 
-        RoomSchedule::where(
-                'room_id',
-                $borrowing->room_id
-            )
-            ->where(
-                'week_start',
-                $weekStart
-            )
-            ->where(
-                'day',
-                $borrowing->day
-            )
-            ->where(
-                'time_slot',
-                $borrowing->time_slot
-            )
-            ->update([
-                'available' => true
-            ]);
-
         /*
         |--------------------------------------------------------------------------
-        | COMPLETE
+        | TRANSACTION
         |--------------------------------------------------------------------------
         */
 
-        $borrowing->update([
+        DB::transaction(function () use (
+            $borrowing,
+            $weekStart
+        ) {
 
-            'status' => 'COMPLETED',
+            /*
+            |--------------------------------------------------------------------------
+            | RETURN STOCK
+            |--------------------------------------------------------------------------
+            */
 
-            'returned_at' => now(),
+            foreach (
+                $borrowing->items as $borrowedItem
+            ) {
 
-        ]);
+                $item =
+                    $borrowedItem->item;
+
+                $oldStock =
+                    $item->stock;
+
+                /*
+                |--------------------------------------------------------------------------
+                | RETURN STOCK
+                |--------------------------------------------------------------------------
+                */
+
+                Item::withoutEvents(function () use (
+                    $item,
+                    $borrowedItem
+                ) {
+
+                    $item->increment(
+
+                        'stock',
+
+                        $borrowedItem->returned_qty
+
+                    );
+
+                });
+
+                $item->refresh();
+
+                /*
+                |--------------------------------------------------------------------------
+                | HISTORY
+                |--------------------------------------------------------------------------
+                */
+
+                ItemHistory::create([
+
+                    'item_id' =>
+                        $item->id,
+
+                    'user_id' =>
+                        auth()->id(),
+
+                    'action' =>
+                        'return',
+
+                    'item_name' =>
+                        $item->name,
+
+                    'old_stock' =>
+                        $oldStock,
+
+                    'new_stock' =>
+                        $item->stock,
+
+                    'description' =>
+                        'Pengembalian alat/bahan',
+
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | UNLOCK ROOM
+            |--------------------------------------------------------------------------
+            */
+
+            RoomSchedule::where(
+                    'room_id',
+                    $borrowing->room_id
+                )
+                ->where(
+                    'week_start',
+                    $weekStart
+                )
+                ->where(
+                    'day',
+                    $borrowing->day
+                )
+                ->where(
+                    'time_slot',
+                    $borrowing->time_slot
+                )
+                ->update([
+
+                    'available' => true
+
+                ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | COMPLETE
+            |--------------------------------------------------------------------------
+            */
+
+            $borrowing->update([
+
+                'status' => 'COMPLETED',
+
+                'returned_at' => now(),
+
+            ]);
+        });
 
         return back();
     }

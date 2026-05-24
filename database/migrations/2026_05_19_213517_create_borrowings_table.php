@@ -43,12 +43,13 @@ return new class extends Migration
                 'WAITING_RETURN',
                 'COMPLETED',
                 'REJECTED',
+                'CANCELLED',
 
             ])->default('PENDING');
 
             $table->timestamp('returned_at')
                 ->nullable();
-                
+
             $table->timestamps();
 
         });

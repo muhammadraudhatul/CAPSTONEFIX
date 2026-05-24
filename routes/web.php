@@ -83,10 +83,37 @@ Route::middleware('auth')->group(function () {
         [BorrowingController::class, 'availableSchedules']
     );
 
-    Route::patch('/student/borrowings/{borrowing}/finish',
-        [BorrowingController::class, 'finish']
-    )->name('student.borrowings.finish');
+    Route::get('/student/borrowings/{borrowing}/return',
+        [BorrowingController::class, 'returnForm']
+    )->name('student.borrowings.return.form');
 
+    Route::patch('/student/borrowings/{borrowing}/return',
+        [BorrowingController::class, 'submitReturn']
+    )->name('student.borrowings.return.submit');
+
+    Route::get('/student/borrowings/{borrowing}/edit',
+        [BorrowingController::class, 'edit']
+    )->name('student.borrowings.edit');
+
+    Route::patch('/student/borrowings/{borrowing}',
+        [BorrowingController::class, 'update']
+    )->name('student.borrowings.update');
+
+    Route::patch('/student/borrowings/{borrowing}/cancel',
+        [BorrowingController::class, 'cancel']
+    )->name('student.borrowings.cancel');
+
+    Route::get('/student/borrowings/{borrowing}/edit',
+        [BorrowingController::class, 'edit']
+    )->name('student.borrowings.edit');
+
+    Route::patch('/student/borrowings/{borrowing}',
+        [BorrowingController::class, 'update']
+    )->name('student.borrowings.update');
+
+    Route::delete('/student/borrowings/{borrowing}',
+        [BorrowingController::class, 'destroy']
+    )->name('student.borrowings.destroy');
 });
 
 /*

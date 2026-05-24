@@ -14,26 +14,38 @@
     <div class="bg-white border-b px-8 py-5 flex justify-between items-center">
 
         <div>
+
             <h1 class="text-2xl font-bold text-gray-800">
                 Student Dashboard
             </h1>
 
             <p class="text-gray-500 text-sm mt-1">
-                Selamat datang, {{ auth()->user()->name }}
+
+                Selamat datang,
+                {{ auth()->user()->name }}
+
                 ({{ auth()->user()->nim }})
+
             </p>
+
         </div>
 
         <!-- Logout -->
         <form method="POST" action="{{ route('logout') }}">
+
             @csrf
 
             <button
                 type="submit"
-                class="text-red-500 border border-red-300 px-4 py-2 rounded-lg hover:bg-red-50 transition"
+                class="text-red-500 border border-red-300
+                       px-4 py-2 rounded-lg
+                       hover:bg-red-50 transition"
             >
+
                 Logout
+
             </button>
+
         </form>
 
     </div>
@@ -41,226 +53,412 @@
     <!-- Content -->
     <div class="p-8">
 
-        <!-- Button -->
-        <a href="{{ route('student.borrowings.create') }}"
-           class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-5 py-3 rounded-xl shadow hover:opacity-90 transition">
+        <!-- Create -->
+        <a
+            href="{{ route('student.borrowings.create') }}"
+            class="inline-flex items-center gap-2
+                   bg-gradient-to-r
+                   from-blue-500 to-purple-600
+                   text-white px-5 py-3 rounded-xl
+                   shadow hover:opacity-90 transition"
+        >
 
             ＋ Peminjaman Baru
+
         </a>
 
-        <!-- Active Borrow -->
+        <!-- ACTIVE -->
         <div class="mt-8">
 
             <h2 class="font-semibold text-lg text-gray-800 mb-4">
+
                 📦 Peminjaman Aktif
+
             </h2>
 
-            <div class="bg-white rounded-2xl shadow-sm p-8 text-center text-gray-400">
+            @forelse($activeBorrowings as $borrowing)
 
-                @forelse($activeBorrowings as $borrowing)
+                <div class="bg-white rounded-2xl shadow-sm p-6 mb-4">
 
-                    <div class="bg-white rounded-2xl shadow-sm p-6 mb-4">
+                    <div class="flex justify-between items-start">
 
-                        <div class="flex justify-between items-start">
+                        <!-- LEFT -->
+                        <div>
 
-                            <div>
+                            <!-- ROOM -->
+                            <h3 class="text-xl font-bold text-gray-800">
 
-                                <h3 class="text-xl font-bold text-gray-800">
+                                {{ $borrowing->room->name }}
 
-                                    {{ $borrowing->room->name }}
+                            </h3>
 
-                                </h3>
+                            <!-- DATE -->
+                            <p class="text-gray-500 mt-1">
 
-                                <p class="text-gray-500 mt-1">
+                                {{
+                                    \Carbon\Carbon::parse(
+                                        $borrowing->borrow_date
+                                    )->format('d M Y')
+                                }}
 
-                                    {{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('d M Y') }}
+                                •
 
-                                    •
+                                {{ $borrowing->time_slot }}
 
-                                    {{ $borrowing->time_slot }}
+                            </p>
+
+                            <!-- PURPOSE -->
+                            <p class="mt-3 text-gray-600">
+
+                                {{ $borrowing->purpose }}
+
+                            </p>
+
+                            <!-- ITEMS -->
+                            <div class="mt-4">
+
+                                <p class="font-semibold text-gray-700">
+
+                                    Alat:
 
                                 </p>
 
-                                <p class="mt-3 text-gray-600">
+                                <ul class="mt-1 text-gray-500">
 
-                                    {{ $borrowing->purpose }}
+                                    @foreach($borrowing->items as $item)
 
-                                </p>
+                                        <li>
 
-                                <div class="mt-4">
+                                            •
+                                            {{ $item->item->name }}
 
-                                    <p class="font-semibold text-gray-700">
+                                            ({{ $item->qty }})
 
-                                        Alat:
+                                        </li>
 
-                                    </p>
+                                    @endforeach
 
-                                    <ul class="mt-1 text-gray-500">
-
-                                        @foreach($borrowing->items as $item)
-
-                                            <li>
-
-                                                •
-                                                {{ $item->item->name }}
-                                                ({{ $item->qty }})
-
-                                            </li>
-
-                                        @endforeach
-
-                                    </ul>
-
-                                </div>
+                                </ul>
 
                             </div>
 
+                        </div>
+
+                        <!-- RIGHT -->
+                        <div class="text-right">
+
                             <!-- STATUS -->
-                            <div>
+                            @if($borrowing->status == 'PENDING')
 
-                                @if($borrowing->status == 'PENDING')
+                                <span class="bg-yellow-100
+                                             text-yellow-700
+                                             px-4 py-2
+                                             rounded-xl
+                                             text-sm
+                                             font-semibold">
 
-                                    <span class="bg-yellow-100
-                                                text-yellow-700
-                                                px-4 py-2
-                                                rounded-xl
-                                                text-sm
-                                                font-semibold">
+                                    PENDING
 
-                                        PENDING
+                                </span>
 
-                                    </span>
+                                <!-- ACTION -->
+                                <div class="mt-4 flex gap-3">
 
-                                @elseif($borrowing->status == 'APPROVED')
+                                    <!-- EDIT -->
+                                    <a
+                                        href="{{ route(
+                                            'student.borrowings.edit',
+                                            $borrowing
+                                        ) }}"
+                                        class="bg-blue-600 text-white
+                                               px-4 py-2 rounded-xl
+                                               text-sm hover:bg-blue-700 transition"
+                                    >
 
-                                    <span class="bg-green-100
-                                                text-green-700
-                                                px-4 py-2
-                                                rounded-xl
-                                                text-sm
-                                                font-semibold">
+                                        Edit
 
-                                        APPROVED
+                                    </a>
 
-                                    </span>
-
-                                    <!-- FINISH BUTTON -->
+                                    <!-- DELETE -->
                                     <form
                                         method="POST"
                                         action="{{ route(
-                                            'student.borrowings.finish',
+                                            'student.borrowings.destroy',
                                             $borrowing
                                         ) }}"
-                                        class="mt-4"
+                                    >
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button
+                                            onclick="return confirm(
+                                                'Hapus peminjaman ini?'
+                                            )"
+                                            class="bg-red-600 text-white
+                                                   px-4 py-2 rounded-xl
+                                                   text-sm hover:bg-red-700 transition"
+                                        >
+
+                                            Delete
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            @elseif($borrowing->status == 'APPROVED')
+
+                                <span class="bg-green-100
+                                             text-green-700
+                                             px-4 py-2
+                                             rounded-xl
+                                             text-sm
+                                             font-semibold">
+
+                                    APPROVED
+
+                                </span>
+
+                                <!-- ACTION -->
+                                <div class="mt-4 flex flex-col gap-3">
+
+                                    <!-- RETURN -->
+                                    <a
+                                        href="{{ route(
+                                            'student.borrowings.return.form',
+                                            $borrowing
+                                        ) }}"
+                                        class="bg-indigo-600 text-white
+                                               px-4 py-2 rounded-xl
+                                               text-sm hover:bg-indigo-700
+                                               transition text-center"
+                                    >
+
+                                        Selesaikan Peminjaman
+
+                                    </a>
+
+                                    <!-- CANCEL -->
+                                    <form
+                                        method="POST"
+                                        action="{{ route(
+                                            'student.borrowings.cancel',
+                                            $borrowing
+                                        ) }}"
                                     >
 
                                         @csrf
                                         @method('PATCH')
 
                                         <button
-                                            class="bg-indigo-600 text-white
-                                                px-4 py-2 rounded-xl
-                                                text-sm hover:bg-indigo-700 transition"
+                                            onclick="return confirm(
+                                                'Batalkan peminjaman ini?'
+                                            )"
+                                            class="w-full bg-red-600
+                                                   text-white px-4 py-2
+                                                   rounded-xl text-sm
+                                                   hover:bg-red-700 transition"
                                         >
 
-                                            Selesaikan Peminjaman
+                                            Batalkan Peminjaman
 
                                         </button>
 
                                     </form>
 
-                                @elseif($borrowing->status == 'WAITING_RETURN')
+                                </div>
 
-                                    <span class="bg-blue-100
-                                                text-blue-700
-                                                px-4 py-2
-                                                rounded-xl
-                                                text-sm
-                                                font-semibold">
+                            @elseif($borrowing->status == 'WAITING_RETURN')
 
-                                        WAITING RETURN
+                                <span class="bg-blue-100
+                                             text-blue-700
+                                             px-4 py-2
+                                             rounded-xl
+                                             text-sm
+                                             font-semibold">
 
-                                    </span>
+                                    WAITING RETURN
 
-                                @elseif($borrowing->status == 'COMPLETED')
+                                </span>
 
-                                    <span class="bg-gray-100
-                                                text-gray-700
-                                                px-4 py-2
-                                                rounded-xl
-                                                text-sm
-                                                font-semibold">
+                            @elseif($borrowing->status == 'COMPLETED')
 
-                                        COMPLETED
+                                <span class="bg-gray-100
+                                             text-gray-700
+                                             px-4 py-2
+                                             rounded-xl
+                                             text-sm
+                                             font-semibold">
 
-                                    </span>
+                                    COMPLETED
 
-                                @elseif($borrowing->status == 'REJECTED')
+                                </span>
 
-                                    <span class="bg-red-100
-                                                text-red-700
-                                                px-4 py-2
-                                                rounded-xl
-                                                text-sm
-                                                font-semibold">
+                            @elseif($borrowing->status == 'REJECTED')
 
-                                        REJECTED
+                                <span class="bg-red-100
+                                             text-red-700
+                                             px-4 py-2
+                                             rounded-xl
+                                             text-sm
+                                             font-semibold">
 
-                                    </span>
+                                    REJECTED
 
-                                @endif
+                                </span>
 
-                            </div>
+                            @elseif($borrowing->status == 'CANCELLED')
+
+                                <span class="bg-gray-200
+                                             text-gray-700
+                                             px-4 py-2
+                                             rounded-xl
+                                             text-sm
+                                             font-semibold">
+
+                                    CANCELLED
+
+                                </span>
+
+                            @endif
 
                         </div>
 
                     </div>
 
-                @empty
+                </div>
 
-                    <div class="bg-white rounded-2xl shadow-sm p-8 text-center text-gray-400">
+            @empty
 
-                        Tidak ada peminjaman aktif
+                <div class="bg-white rounded-2xl shadow-sm
+                            p-8 text-center text-gray-400">
 
-                    </div>
+                    Tidak ada peminjaman aktif
 
-                @endforelse
+                </div>
 
-            </div>
+            @endforelse
 
         </div>
 
-        <!-- History -->
+        <!-- HISTORY -->
         <div class="mt-10">
 
             <h2 class="font-semibold text-lg text-gray-800 mb-4">
+
                 🕘 History Peminjaman
+
             </h2>
 
             <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
 
                 <table class="w-full">
 
-                    <thead class="bg-gray-50 text-left text-sm text-gray-600">
+                    <thead class="bg-gray-50 text-left
+                                  text-sm text-gray-600">
+
                         <tr>
-                            <th class="px-6 py-4">Tanggal</th>
-                            <th class="px-6 py-4">Ruangan</th>
-                            <th class="px-6 py-4">Waktu</th>
-                            <th class="px-6 py-4">Alat</th>
-                            <th class="px-6 py-4">Status</th>
+
+                            <th class="px-6 py-4">
+                                Tanggal
+                            </th>
+
+                            <th class="px-6 py-4">
+                                Ruangan
+                            </th>
+
+                            <th class="px-6 py-4">
+                                Waktu
+                            </th>
+
+                            <th class="px-6 py-4">
+                                Alat
+                            </th>
+
+                            <th class="px-6 py-4">
+                                Status
+                            </th>
+
                         </tr>
+
                     </thead>
 
                     <tbody>
 
-                        <tr>
-                            <td colspan="5"
-                                class="text-center text-gray-400 py-10">
+                        @forelse($histories as $history)
 
-                                Belum ada history peminjaman
+                            <tr class="border-t">
 
-                            </td>
-                        </tr>
+                                <!-- DATE -->
+                                <td class="px-6 py-5">
+
+                                    {{
+                                        \Carbon\Carbon::parse(
+                                            $history->borrow_date
+                                        )->format('d M Y')
+                                    }}
+
+                                </td>
+
+                                <!-- ROOM -->
+                                <td class="px-6 py-5">
+
+                                    {{ $history->room->name }}
+
+                                </td>
+
+                                <!-- TIME -->
+                                <td class="px-6 py-5">
+
+                                    {{ $history->time_slot }}
+
+                                </td>
+
+                                <!-- ITEMS -->
+                                <td class="px-6 py-5">
+
+                                    @foreach($history->items as $item)
+
+                                        <div>
+
+                                            •
+                                            {{ $item->item->name }}
+
+                                            ({{ $item->qty }})
+
+                                        </div>
+
+                                    @endforeach
+
+                                </td>
+
+                                <!-- STATUS -->
+                                <td class="px-6 py-5">
+
+                                    {{ $history->status }}
+
+                                </td>
+
+                            </tr>
+
+                        @empty
+
+                            <tr>
+
+                                <td
+                                    colspan="5"
+                                    class="text-center text-gray-400 py-10"
+                                >
+
+                                    Belum ada history peminjaman
+
+                                </td>
+
+                            </tr>
+
+                        @endforelse
 
                     </tbody>
 

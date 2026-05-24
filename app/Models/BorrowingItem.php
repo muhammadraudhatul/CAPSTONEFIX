@@ -11,6 +11,7 @@ class BorrowingItem extends Model
         'borrowing_id',
         'item_id',
         'qty',
+        'returned_qty',
 
     ];
 

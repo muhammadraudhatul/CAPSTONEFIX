@@ -6,14 +6,55 @@ use App\Http\Controllers\Controller;
 use App\Models\Borrowing;
 use App\Models\BorrowingItem;
 use App\Models\Item;
+use App\Models\ItemHistory;
 use App\Models\Room;
 use App\Models\RoomSchedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 
 class BorrowingController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | HELPERS
+    |--------------------------------------------------------------------------
+    */
+
+    private function getDayName($date)
+    {
+        $dayMap = [
+
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+
+        ];
+
+        return $dayMap[
+            Carbon::parse($date)
+                ->format('l')
+        ];
+    }
+
+    private function authorizeBorrowing(
+        Borrowing $borrowing
+    ) {
+        if (
+            $borrowing->user_id != auth()->id()
+        ) {
+            abort(403);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CREATE
+    |--------------------------------------------------------------------------
+    */
+
     public function create()
     {
         $rooms = Room::all();
@@ -26,6 +67,12 @@ class BorrowingController extends Controller
         );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | AVAILABLE SCHEDULES
+    |--------------------------------------------------------------------------
+    */
+
     public function availableSchedules(Request $request)
     {
         $date = Carbon::parse(
@@ -37,19 +84,9 @@ class BorrowingController extends Controller
             ->startOfWeek(Carbon::MONDAY)
             ->format('Y-m-d');
 
-        $dayMap = [
-
-            'Monday' => 'Senin',
-            'Tuesday' => 'Selasa',
-            'Wednesday' => 'Rabu',
-            'Thursday' => 'Kamis',
-            'Friday' => 'Jumat',
-
-        ];
-
-        $day = $dayMap[
-            $date->format('l')
-        ];
+        $day = $this->getDayName(
+            $request->date
+        );
 
         $schedules = RoomSchedule::where(
                 'room_id',
@@ -77,22 +114,11 @@ class BorrowingController extends Controller
         );
     }
 
-    public function finish(Borrowing $borrowing)
-    {
-        if (
-            $borrowing->user_id != auth()->id()
-        ) {
-            abort(403);
-        }
-
-        $borrowing->update([
-
-            'status' => 'WAITING_RETURN',
-
-        ]);
-
-        return back();
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | STORE
+    |--------------------------------------------------------------------------
+    */
 
     public function store(Request $request)
     {
@@ -116,69 +142,668 @@ class BorrowingController extends Controller
 
         ]);
 
-        $day = Carbon::parse(
+        /*
+        |--------------------------------------------------------------------------
+        | DAY
+        |--------------------------------------------------------------------------
+        */
+
+        $day = $this->getDayName(
             $request->borrow_date
-        )->locale('id')->translatedFormat('l');
+        );
 
-        $dayMap = [
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDATE SCHEDULE
+        |--------------------------------------------------------------------------
+        */
 
-            'Monday' => 'Senin',
-            'Tuesday' => 'Selasa',
-            'Wednesday' => 'Rabu',
-            'Thursday' => 'Kamis',
-            'Friday' => 'Jumat',
+        $date = Carbon::parse(
+            $request->borrow_date
+        );
 
-        ];
+        $weekStart = $date
+            ->copy()
+            ->startOfWeek(Carbon::MONDAY)
+            ->format('Y-m-d');
 
-        $day = $dayMap[
-            Carbon::parse($request->borrow_date)
-                ->format('l')
-        ];
+        $schedule = RoomSchedule::where(
+                'room_id',
+                $request->room_id
+            )
+            ->where(
+                'week_start',
+                $weekStart
+            )
+            ->where(
+                'day',
+                $day
+            )
+            ->where(
+                'time_slot',
+                $request->time_slot
+            )
+            ->where(
+                'available',
+                true
+            )
+            ->first();
 
-        $borrowing = Borrowing::create([
+        if (!$schedule)
+        {
+            return back()
+                ->withErrors([
 
-            'user_id' => auth()->id(),
+                    'schedule' =>
+                        'Jadwal sudah tidak tersedia.'
 
-            'room_id' => $request->room_id,
+                ]);
+        }
 
-            'borrow_date' => $request->borrow_date,
+        /*
+        |--------------------------------------------------------------------------
+        | TRANSACTION
+        |--------------------------------------------------------------------------
+        */
 
-            'day' => $day,
+        DB::transaction(function () use (
+            $request,
+            $day
+        ) {
 
-            'time_slot' => $request->time_slot,
+            /*
+            |--------------------------------------------------------------------------
+            | CREATE BORROWING
+            |--------------------------------------------------------------------------
+            */
 
-            'purpose' => $request->purpose,
+            $borrowing = Borrowing::create([
 
-            'total_people' => $request->total_people,
+                'user_id' => auth()->id(),
 
-            'with_lecturer' =>
-                $request->with_lecturer,
+                'room_id' =>
+                    $request->room_id,
 
-            'lecturer_name' =>
-                $request->lecturer_name,
+                'borrow_date' =>
+                    $request->borrow_date,
 
-            'status' => 'PENDING',
+                'day' =>
+                    $day,
+
+                'time_slot' =>
+                    $request->time_slot,
+
+                'purpose' =>
+                    $request->purpose,
+
+                'total_people' =>
+                    $request->total_people,
+
+                'with_lecturer' =>
+                    $request->with_lecturer,
+
+                'lecturer_name' =>
+                    $request->lecturer_name,
+
+                'status' => 'PENDING',
+
+            ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | ITEMS
+            |--------------------------------------------------------------------------
+            */
+
+            foreach ($request->items as $item) {
+
+                if (
+                    !empty($item['item_id']) &&
+                    !empty($item['qty'])
+                ) {
+
+                    $itemModel = Item::find(
+                        $item['item_id']
+                    );
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | VALIDATE STOCK
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (
+                        $item['qty'] >
+                        $itemModel->stock
+                    ) {
+                        abort(
+                            400,
+                            'Stock item tidak cukup.'
+                        );
+                    }
+
+                    BorrowingItem::create([
+
+                        'borrowing_id' =>
+                            $borrowing->id,
+
+                        'item_id' =>
+                            $item['item_id'],
+
+                        'qty' =>
+                            $item['qty'],
+
+                    ]);
+                }
+            }
+
+        });
+
+        return redirect()
+            ->route('student.dashboard');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | EDIT
+    |--------------------------------------------------------------------------
+    */
+
+    public function edit(Borrowing $borrowing)
+    {
+        $this->authorizeBorrowing(
+            $borrowing
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | ONLY PENDING
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $borrowing->status != 'PENDING'
+        ) {
+            return back();
+        }
+
+        $rooms = Room::all();
+
+        $items = Item::orderBy('name')->get();
+
+        $borrowing->load([
+            'items.item'
+        ]);
+
+        return view(
+            'student.borrowings.edit',
+            compact(
+                'borrowing',
+                'rooms',
+                'items'
+            )
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE
+    |--------------------------------------------------------------------------
+    */
+
+    public function update(
+        Request $request,
+        Borrowing $borrowing
+    ) {
+        $this->authorizeBorrowing(
+            $borrowing
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | ONLY PENDING
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $borrowing->status != 'PENDING'
+        ) {
+            return back();
+        }
+
+        $request->validate([
+
+            'borrow_date' => 'required|date',
+
+            'room_id' => 'required',
+
+            'time_slot' => 'required',
+
+            'purpose' => 'required',
+
+            'total_people' => 'required|integer',
+
+            'with_lecturer' => 'required',
+
+            'items' => 'required|array',
 
         ]);
 
-        foreach ($request->items as $item) {
+        /*
+        |--------------------------------------------------------------------------
+        | DAY
+        |--------------------------------------------------------------------------
+        */
 
-            if (
-                !empty($item['item_id']) &&
-                !empty($item['qty'])
+        $day = $this->getDayName(
+            $request->borrow_date
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDATE SCHEDULE
+        |--------------------------------------------------------------------------
+        */
+
+        $date = Carbon::parse(
+            $request->borrow_date
+        );
+
+        $weekStart = $date
+            ->copy()
+            ->startOfWeek(Carbon::MONDAY)
+            ->format('Y-m-d');
+
+        $schedule = RoomSchedule::where(
+                'room_id',
+                $request->room_id
+            )
+            ->where(
+                'week_start',
+                $weekStart
+            )
+            ->where(
+                'day',
+                $day
+            )
+            ->where(
+                'time_slot',
+                $request->time_slot
+            )
+            ->where(
+                'available',
+                true
+            )
+            ->first();
+
+        if (!$schedule)
+        {
+            return back()
+                ->withErrors([
+
+                    'schedule' =>
+                        'Jadwal sudah tidak tersedia.'
+
+                ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | TRANSACTION
+        |--------------------------------------------------------------------------
+        */
+
+        DB::transaction(function () use (
+            $request,
+            $borrowing,
+            $day
+        ) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | UPDATE BORROWING
+            |--------------------------------------------------------------------------
+            */
+
+            $borrowing->update([
+
+                'room_id' =>
+                    $request->room_id,
+
+                'borrow_date' =>
+                    $request->borrow_date,
+
+                'day' =>
+                    $day,
+
+                'time_slot' =>
+                    $request->time_slot,
+
+                'purpose' =>
+                    $request->purpose,
+
+                'total_people' =>
+                    $request->total_people,
+
+                'with_lecturer' =>
+                    $request->with_lecturer,
+
+                'lecturer_name' =>
+                    $request->lecturer_name,
+
+            ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | RESET ITEMS
+            |--------------------------------------------------------------------------
+            */
+
+            $borrowing->items()->delete();
+
+            foreach ($request->items as $item) {
+
+                if (
+                    !empty($item['item_id']) &&
+                    !empty($item['qty'])
+                ) {
+
+                    $itemModel = Item::find(
+                        $item['item_id']
+                    );
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | VALIDATE STOCK
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (
+                        $item['qty'] >
+                        $itemModel->stock
+                    ) {
+                        abort(
+                            400,
+                            'Stock item tidak cukup.'
+                        );
+                    }
+
+                    BorrowingItem::create([
+
+                        'borrowing_id' =>
+                            $borrowing->id,
+
+                        'item_id' =>
+                            $item['item_id'],
+
+                        'qty' =>
+                            $item['qty'],
+
+                    ]);
+                }
+            }
+
+        });
+
+        return redirect()
+            ->route('student.dashboard');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE PENDING
+    |--------------------------------------------------------------------------
+    */
+
+    public function destroy(Borrowing $borrowing)
+    {
+        $this->authorizeBorrowing(
+            $borrowing
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | ONLY PENDING
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $borrowing->status != 'PENDING'
+        ) {
+            return back();
+        }
+
+        $borrowing->delete();
+
+        return back();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CANCEL APPROVED
+    |--------------------------------------------------------------------------
+    */
+
+    public function cancel(Borrowing $borrowing)
+    {
+        $this->authorizeBorrowing(
+            $borrowing
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | ONLY APPROVED
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $borrowing->status != 'APPROVED'
+        ) {
+            return back();
+        }
+
+        DB::transaction(function () use (
+            $borrowing
+        ) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | RETURN STOCK
+            |--------------------------------------------------------------------------
+            */
+
+            foreach (
+                $borrowing->items
+                as $borrowedItem
             ) {
 
-                BorrowingItem::create([
+                $item =
+                    $borrowedItem->item;
 
-                    'borrowing_id' => $borrowing->id,
+                $oldStock =
+                    $item->stock;
 
-                    'item_id' => $item['item_id'],
+                /*
+                |--------------------------------------------------------------------------
+                | RETURN STOCK
+                |--------------------------------------------------------------------------
+                */
 
-                    'qty' => $item['qty'],
+                Item::withoutEvents(function () use (
+                    $item,
+                    $borrowedItem
+                ) {
+
+                    $item->increment(
+
+                        'stock',
+
+                        $borrowedItem->qty
+
+                    );
+
+                });
+
+                $item->refresh();
+
+                /*
+                |--------------------------------------------------------------------------
+                | HISTORY
+                |--------------------------------------------------------------------------
+                */
+
+                ItemHistory::create([
+
+                    'item_id' =>
+                        $item->id,
+
+                    'user_id' =>
+                        auth()->id(),
+
+                    'action' =>
+                        'cancel',
+
+                    'item_name' =>
+                        $item->name,
+
+                    'old_stock' =>
+                        $oldStock,
+
+                    'new_stock' =>
+                        $item->stock,
+
+                    'description' =>
+                        'Peminjaman dibatalkan',
 
                 ]);
             }
+
+            /*
+            |--------------------------------------------------------------------------
+            | UNLOCK ROOM
+            |--------------------------------------------------------------------------
+            */
+
+            $date = Carbon::parse(
+                $borrowing->borrow_date
+            );
+
+            $weekStart = $date
+                ->copy()
+                ->startOfWeek(Carbon::MONDAY)
+                ->format('Y-m-d');
+
+            RoomSchedule::where(
+                    'room_id',
+                    $borrowing->room_id
+                )
+                ->where(
+                    'week_start',
+                    $weekStart
+                )
+                ->where(
+                    'day',
+                    $borrowing->day
+                )
+                ->where(
+                    'time_slot',
+                    $borrowing->time_slot
+                )
+                ->update([
+
+                    'available' => true
+
+                ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | CANCELLED
+            |--------------------------------------------------------------------------
+            */
+
+            $borrowing->update([
+
+                'status' => 'CANCELLED',
+
+            ]);
+
+        });
+
+        return back();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | RETURN FORM
+    |--------------------------------------------------------------------------
+    */
+
+    public function returnForm(Borrowing $borrowing)
+    {
+        $this->authorizeBorrowing(
+            $borrowing
+        );
+
+        $borrowing->load([
+            'items.item'
+        ]);
+
+        return view(
+            'student.borrowings.return',
+            compact('borrowing')
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | SUBMIT RETURN
+    |--------------------------------------------------------------------------
+    */
+
+    public function submitReturn(
+        Request $request,
+        Borrowing $borrowing
+    ) {
+        $this->authorizeBorrowing(
+            $borrowing
+        );
+
+        foreach (
+            $borrowing->items as $borrowedItem
+        ) {
+
+            $returnedQty =
+                $request->returned_qty[
+                    $borrowedItem->id
+                ] ?? 0;
+
+            /*
+            |--------------------------------------------------------------------------
+            | MAX VALIDATION
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                $returnedQty >
+                $borrowedItem->qty
+            ) {
+                $returnedQty =
+                    $borrowedItem->qty;
+            }
+
+            $borrowedItem->update([
+
+                'returned_qty' =>
+                    $returnedQty,
+
+            ]);
         }
+
+        $borrowing->update([
+
+            'status' => 'WAITING_RETURN',
+
+        ]);
 
         return redirect()
             ->route('student.dashboard');

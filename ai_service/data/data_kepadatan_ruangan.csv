@@ -1,0 +1,346 @@
+Laboratorium,Hari_Int,Jam_Mulai_Int,Frekuensi
+Laboratorium Anatomi Fisiologi,0.0,8.0,2
+Laboratorium Anatomi Fisiologi,0.0,9.0,2
+Laboratorium Anatomi Fisiologi,0.0,10.0,2
+Laboratorium Anatomi Fisiologi,1.0,9.0,2
+Laboratorium Anatomi Fisiologi,1.0,10.0,3
+Laboratorium Anatomi Fisiologi,1.0,13.0,1
+Laboratorium Anatomi Fisiologi,2.0,7.0,1
+Laboratorium Anatomi Fisiologi,2.0,8.0,2
+Laboratorium Anatomi Fisiologi,2.0,9.0,1
+Laboratorium Anatomi Fisiologi,2.0,10.0,1
+Laboratorium Anatomi Fisiologi,3.0,8.0,2
+Laboratorium Anatomi Fisiologi,3.0,9.0,8
+Laboratorium Anatomi Fisiologi,3.0,10.0,2
+Laboratorium Anatomi Fisiologi,3.0,11.0,1
+Laboratorium Anatomi Fisiologi,3.0,13.0,1
+Laboratorium Anatomi Fisiologi,4.0,9.0,1
+Laboratorium Anatomi Fisiologi,4.0,11.0,2
+Laboratorium Anatomi Fisiologi,4.0,12.0,1
+Laboratorium Anatomi Fisiologi,4.0,14.0,1
+Laboratorium Anatomi Fisiologi,5.0,8.0,1
+Laboratorium Anatomi Fisiologi,5.0,10.0,1
+Laboratorium Anatomi Fisiologi,6.0,7.0,1
+Laboratorium Anatomi Fisiologi,6.0,14.0,1
+Laboratorium Bencana,0.0,10.0,1
+Laboratorium Bencana,0.0,13.0,2
+Laboratorium Bencana,0.0,15.0,1
+Laboratorium Bencana,1.0,10.0,1
+Laboratorium Bencana,1.0,13.0,1
+Laboratorium Bencana,1.0,14.0,1
+Laboratorium Bencana,2.0,8.0,1
+Laboratorium Bencana,2.0,12.0,2
+Laboratorium Bencana,2.0,13.0,1
+Laboratorium Bencana,2.0,14.0,2
+Laboratorium Bencana,3.0,8.0,2
+Laboratorium Bencana,3.0,9.0,1
+Laboratorium Bencana,3.0,13.0,1
+Laboratorium Bencana,4.0,9.0,2
+Laboratorium Bencana,4.0,11.0,1
+Laboratorium Bencana,4.0,13.0,2
+Laboratorium Bencana,5.0,10.0,1
+Laboratorium Bencana,6.0,6.0,1
+Laboratorium KGD,0.0,7.0,1
+Laboratorium KGD,0.0,10.0,1
+Laboratorium KGD,1.0,7.0,2
+Laboratorium KGD,1.0,8.0,3
+Laboratorium KGD,1.0,9.0,1
+Laboratorium KGD,1.0,10.0,1
+Laboratorium KGD,1.0,11.0,2
+Laboratorium KGD,1.0,12.0,1
+Laboratorium KGD,1.0,13.0,2
+Laboratorium KGD,2.0,7.0,1
+Laboratorium KGD,2.0,8.0,2
+Laboratorium KGD,2.0,9.0,1
+Laboratorium KGD,2.0,10.0,4
+Laboratorium KGD,2.0,13.0,1
+Laboratorium KGD,3.0,7.0,3
+Laboratorium KGD,3.0,8.0,4
+Laboratorium KGD,3.0,9.0,1
+Laboratorium KGD,3.0,10.0,2
+Laboratorium KGD,3.0,12.0,1
+Laboratorium KGD,3.0,13.0,2
+Laboratorium KGD,3.0,14.0,1
+Laboratorium KGD,4.0,8.0,3
+Laboratorium KGD,4.0,9.0,2
+Laboratorium KGD,4.0,10.0,1
+Laboratorium KGD,4.0,12.0,1
+Laboratorium KGD,4.0,13.0,2
+Laboratorium KGD,5.0,7.0,1
+Laboratorium KGD,5.0,8.0,1
+Laboratorium KGD,5.0,10.0,3
+Laboratorium KGD,5.0,11.0,2
+Laboratorium KMB/DKKD,0.0,7.0,7
+Laboratorium KMB/DKKD,0.0,8.0,10
+Laboratorium KMB/DKKD,0.0,9.0,4
+Laboratorium KMB/DKKD,0.0,10.0,7
+Laboratorium KMB/DKKD,0.0,11.0,1
+Laboratorium KMB/DKKD,0.0,13.0,5
+Laboratorium KMB/DKKD,0.0,14.0,1
+Laboratorium KMB/DKKD,0.0,15.0,1
+Laboratorium KMB/DKKD,1.0,7.0,6
+Laboratorium KMB/DKKD,1.0,8.0,12
+Laboratorium KMB/DKKD,1.0,9.0,3
+Laboratorium KMB/DKKD,1.0,10.0,6
+Laboratorium KMB/DKKD,1.0,11.0,9
+Laboratorium KMB/DKKD,1.0,13.0,7
+Laboratorium KMB/DKKD,1.0,14.0,3
+Laboratorium KMB/DKKD,2.0,7.0,3
+Laboratorium KMB/DKKD,2.0,8.0,8
+Laboratorium KMB/DKKD,2.0,9.0,5
+Laboratorium KMB/DKKD,2.0,10.0,5
+Laboratorium KMB/DKKD,2.0,11.0,2
+Laboratorium KMB/DKKD,2.0,12.0,1
+Laboratorium KMB/DKKD,2.0,13.0,7
+Laboratorium KMB/DKKD,2.0,14.0,1
+Laboratorium KMB/DKKD,2.0,15.0,1
+Laboratorium KMB/DKKD,3.0,7.0,6
+Laboratorium KMB/DKKD,3.0,8.0,16
+Laboratorium KMB/DKKD,3.0,9.0,8
+Laboratorium KMB/DKKD,3.0,10.0,9
+Laboratorium KMB/DKKD,3.0,11.0,2
+Laboratorium KMB/DKKD,3.0,13.0,10
+Laboratorium KMB/DKKD,3.0,14.0,1
+Laboratorium KMB/DKKD,4.0,7.0,3
+Laboratorium KMB/DKKD,4.0,8.0,16
+Laboratorium KMB/DKKD,4.0,9.0,13
+Laboratorium KMB/DKKD,4.0,10.0,5
+Laboratorium KMB/DKKD,4.0,11.0,4
+Laboratorium KMB/DKKD,4.0,13.0,1
+Laboratorium KMB/DKKD,4.0,14.0,2
+Laboratorium KMB/DKKD,4.0,15.0,1
+Laboratorium KMB/DKKD,5.0,7.0,1
+Laboratorium KMB/DKKD,5.0,8.0,2
+Laboratorium KMB/DKKD,5.0,10.0,3
+Laboratorium KMB/DKKD,5.0,13.0,1
+Laboratorium KMB/DKKD,6.0,8.0,1
+Laboratorium KMB/DKKD,6.0,9.0,1
+Laboratorium KMB/DKKD,6.0,10.0,5
+Laboratorium KMB/DKKD,6.0,13.0,2
+Laboratorium Kardiovaskuler/CVCU,0.0,7.0,1
+Laboratorium Kardiovaskuler/CVCU,0.0,8.0,3
+Laboratorium Kardiovaskuler/CVCU,0.0,9.0,1
+Laboratorium Kardiovaskuler/CVCU,0.0,10.0,2
+Laboratorium Kardiovaskuler/CVCU,0.0,13.0,3
+Laboratorium Kardiovaskuler/CVCU,1.0,7.0,2
+Laboratorium Kardiovaskuler/CVCU,1.0,8.0,5
+Laboratorium Kardiovaskuler/CVCU,1.0,9.0,7
+Laboratorium Kardiovaskuler/CVCU,1.0,10.0,3
+Laboratorium Kardiovaskuler/CVCU,1.0,11.0,2
+Laboratorium Kardiovaskuler/CVCU,1.0,13.0,6
+Laboratorium Kardiovaskuler/CVCU,2.0,7.0,1
+Laboratorium Kardiovaskuler/CVCU,2.0,8.0,7
+Laboratorium Kardiovaskuler/CVCU,2.0,9.0,2
+Laboratorium Kardiovaskuler/CVCU,2.0,10.0,6
+Laboratorium Kardiovaskuler/CVCU,2.0,13.0,5
+Laboratorium Kardiovaskuler/CVCU,2.0,14.0,3
+Laboratorium Kardiovaskuler/CVCU,3.0,7.0,4
+Laboratorium Kardiovaskuler/CVCU,3.0,8.0,2
+Laboratorium Kardiovaskuler/CVCU,3.0,9.0,5
+Laboratorium Kardiovaskuler/CVCU,3.0,10.0,4
+Laboratorium Kardiovaskuler/CVCU,3.0,13.0,7
+Laboratorium Kardiovaskuler/CVCU,3.0,14.0,2
+Laboratorium Kardiovaskuler/CVCU,4.0,8.0,3
+Laboratorium Kardiovaskuler/CVCU,4.0,9.0,8
+Laboratorium Kardiovaskuler/CVCU,4.0,10.0,4
+Laboratorium Kardiovaskuler/CVCU,4.0,11.0,1
+Laboratorium Kardiovaskuler/CVCU,4.0,12.0,1
+Laboratorium Kardiovaskuler/CVCU,4.0,13.0,2
+Laboratorium Kardiovaskuler/CVCU,4.0,14.0,1
+Laboratorium Kardiovaskuler/CVCU,5.0,10.0,2
+Laboratorium Kardiovaskuler/CVCU,5.0,11.0,1
+Laboratorium Kardiovaskuler/CVCU,5.0,13.0,1
+Laboratorium Kardiovaskuler/CVCU,6.0,7.0,1
+Laboratorium Kardiovaskuler/CVCU,6.0,10.0,1
+Laboratorium Kardiovaskuler/CVCU,6.0,14.0,1
+Laboratorium Kardiovaskuler/CVCU,6.0,15.0,1
+Laboratorium Kardiovaskuler/CVCU ,2.0,9.0,1
+Laboratorium Kardiovaskuler/CVCU/CVCU,1.0,11.0,1
+Laboratorium Kardiovaskuler/CVCU/CVCU,1.0,13.0,1
+Laboratorium Kardiovaskuler/CVCU/CVCU,2.0,8.0,1
+Laboratorium Kardiovaskuler/CVCU/CVCU,2.0,9.0,1
+Laboratorium Kardiovaskuler/CVCU/CVCU,2.0,10.0,1
+Laboratorium Kardiovaskuler/CVCU/CVCU,2.0,15.0,1
+Laboratorium Kardiovaskuler/CVCU/CVCU,4.0,8.0,1
+Laboratorium Kardiovaskuler/CVCU/CVCU,5.0,8.0,1
+Laboratorium Kardiovaskuler/CVCU/CVCU,5.0,13.0,1
+Laboratorium Keperawatan Anak,0.0,7.0,3
+Laboratorium Keperawatan Anak,0.0,8.0,2
+Laboratorium Keperawatan Anak,0.0,9.0,1
+Laboratorium Keperawatan Anak,0.0,10.0,5
+Laboratorium Keperawatan Anak,0.0,11.0,2
+Laboratorium Keperawatan Anak,0.0,12.0,1
+Laboratorium Keperawatan Anak,0.0,13.0,5
+Laboratorium Keperawatan Anak,0.0,14.0,2
+Laboratorium Keperawatan Anak,0.0,15.0,2
+Laboratorium Keperawatan Anak,1.0,7.0,1
+Laboratorium Keperawatan Anak,1.0,8.0,5
+Laboratorium Keperawatan Anak,1.0,9.0,1
+Laboratorium Keperawatan Anak,1.0,10.0,5
+Laboratorium Keperawatan Anak,1.0,11.0,6
+Laboratorium Keperawatan Anak,1.0,13.0,5
+Laboratorium Keperawatan Anak,1.0,14.0,1
+Laboratorium Keperawatan Anak,1.0,15.0,1
+Laboratorium Keperawatan Anak,2.0,7.0,8
+Laboratorium Keperawatan Anak,2.0,8.0,1
+Laboratorium Keperawatan Anak,2.0,9.0,2
+Laboratorium Keperawatan Anak,2.0,10.0,3
+Laboratorium Keperawatan Anak,2.0,11.0,2
+Laboratorium Keperawatan Anak,2.0,13.0,3
+Laboratorium Keperawatan Anak,2.0,14.0,1
+Laboratorium Keperawatan Anak,2.0,15.0,6
+Laboratorium Keperawatan Anak,3.0,7.0,7
+Laboratorium Keperawatan Anak,3.0,8.0,1
+Laboratorium Keperawatan Anak,3.0,9.0,1
+Laboratorium Keperawatan Anak,3.0,10.0,7
+Laboratorium Keperawatan Anak,3.0,11.0,1
+Laboratorium Keperawatan Anak,3.0,12.0,1
+Laboratorium Keperawatan Anak,3.0,13.0,7
+Laboratorium Keperawatan Anak,3.0,15.0,4
+Laboratorium Keperawatan Anak,4.0,7.0,7
+Laboratorium Keperawatan Anak,4.0,8.0,7
+Laboratorium Keperawatan Anak,4.0,9.0,1
+Laboratorium Keperawatan Anak,4.0,10.0,2
+Laboratorium Keperawatan Anak,4.0,13.0,7
+Laboratorium Keperawatan Anak,4.0,14.0,1
+Laboratorium Keperawatan Anak,4.0,15.0,2
+Laboratorium Keperawatan Anak,5.0,7.0,1
+Laboratorium Keperawatan Anak,5.0,11.0,1
+Laboratorium Keperawatan Anak,5.0,13.0,1
+Laboratorium Keperawatan Anak,5.0,14.0,1
+Laboratorium Keperawatan Anak,6.0,7.0,1
+Laboratorium Keperawatan Anak,6.0,9.0,1
+Laboratorium Keperawatan Anak,6.0,11.0,1
+Laboratorium Keperawatan Anak,6.0,13.0,3
+Laboratorium Keperawatan Jiwa,0.0,7.0,3
+Laboratorium Keperawatan Jiwa,0.0,9.0,1
+Laboratorium Keperawatan Jiwa,0.0,12.0,1
+Laboratorium Keperawatan Jiwa,1.0,7.0,1
+Laboratorium Keperawatan Jiwa,1.0,8.0,1
+Laboratorium Keperawatan Jiwa,1.0,9.0,1
+Laboratorium Keperawatan Jiwa,1.0,10.0,2
+Laboratorium Keperawatan Jiwa,1.0,11.0,1
+Laboratorium Keperawatan Jiwa,1.0,13.0,2
+Laboratorium Keperawatan Jiwa,2.0,7.0,4
+Laboratorium Keperawatan Jiwa,2.0,8.0,2
+Laboratorium Keperawatan Jiwa,2.0,9.0,1
+Laboratorium Keperawatan Jiwa,2.0,11.0,1
+Laboratorium Keperawatan Jiwa,2.0,12.0,2
+Laboratorium Keperawatan Jiwa,2.0,13.0,1
+Laboratorium Keperawatan Jiwa,2.0,14.0,2
+Laboratorium Keperawatan Jiwa,3.0,7.0,1
+Laboratorium Keperawatan Jiwa,3.0,8.0,4
+Laboratorium Keperawatan Jiwa,3.0,9.0,2
+Laboratorium Keperawatan Jiwa,3.0,10.0,1
+Laboratorium Keperawatan Jiwa,3.0,11.0,3
+Laboratorium Keperawatan Jiwa,3.0,13.0,5
+Laboratorium Keperawatan Jiwa,3.0,14.0,2
+Laboratorium Keperawatan Jiwa,4.0,7.0,2
+Laboratorium Keperawatan Jiwa,4.0,8.0,5
+Laboratorium Keperawatan Jiwa,4.0,9.0,2
+Laboratorium Keperawatan Jiwa,4.0,10.0,4
+Laboratorium Keperawatan Jiwa,4.0,11.0,3
+Laboratorium Keperawatan Jiwa,4.0,13.0,2
+Laboratorium Keperawatan Jiwa,5.0,7.0,2
+Laboratorium Keperawatan Jiwa,5.0,8.0,3
+Laboratorium Keperawatan Jiwa,5.0,9.0,4
+Laboratorium Keperawatan Jiwa,5.0,13.0,1
+Laboratorium Keperawatan Jiwa,6.0,7.0,4
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",0.0,7.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",0.0,8.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",0.0,9.0,3
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",0.0,10.0,3
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",0.0,11.0,2
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",0.0,13.0,3
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",0.0,14.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",0.0,15.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",1.0,7.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",1.0,8.0,6
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",1.0,9.0,6
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",1.0,10.0,2
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",1.0,11.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",1.0,13.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",1.0,14.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",2.0,7.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",2.0,8.0,4
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",2.0,9.0,4
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",2.0,10.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",2.0,11.0,3
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",2.0,13.0,9
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",2.0,15.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",3.0,7.0,3
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",3.0,8.0,6
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",3.0,9.0,4
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",3.0,10.0,4
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",3.0,11.0,3
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",3.0,12.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",3.0,13.0,2
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",3.0,14.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",4.0,7.0,7
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",4.0,8.0,8
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",4.0,9.0,5
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",4.0,10.0,2
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",4.0,11.0,2
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",4.0,14.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",4.0,15.0,2
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",4.0,16.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",5.0,8.0,2
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",5.0,9.0,2
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",5.0,10.0,2
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",5.0,11.0,2
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",5.0,12.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",6.0,8.0,2
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik",6.0,13.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik dan Gerontik",2.0,9.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik dan Gerontik",3.0,13.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik dan Gerontik",4.0,7.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik dan Gerontik",4.0,8.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik dan Gerontik",5.0,9.0,1
+"Laboratorium Keperawatan Komunitas, Keluarga dan Gerontik dan Gerontik",6.0,11.0,1
+Laboratorium Maternitas,0.0,7.0,1
+Laboratorium Maternitas,0.0,8.0,7
+Laboratorium Maternitas,0.0,9.0,2
+Laboratorium Maternitas,0.0,10.0,7
+Laboratorium Maternitas,0.0,11.0,3
+Laboratorium Maternitas,0.0,13.0,5
+Laboratorium Maternitas,1.0,7.0,9
+Laboratorium Maternitas,1.0,8.0,6
+Laboratorium Maternitas,1.0,9.0,4
+Laboratorium Maternitas,1.0,10.0,14
+Laboratorium Maternitas,1.0,11.0,1
+Laboratorium Maternitas,1.0,12.0,2
+Laboratorium Maternitas,1.0,13.0,7
+Laboratorium Maternitas,1.0,14.0,1
+Laboratorium Maternitas,2.0,7.0,7
+Laboratorium Maternitas,2.0,8.0,12
+Laboratorium Maternitas,2.0,9.0,4
+Laboratorium Maternitas,2.0,10.0,8
+Laboratorium Maternitas,2.0,11.0,2
+Laboratorium Maternitas,2.0,13.0,4
+Laboratorium Maternitas,2.0,14.0,2
+Laboratorium Maternitas,3.0,7.0,8
+Laboratorium Maternitas,3.0,8.0,10
+Laboratorium Maternitas,3.0,9.0,4
+Laboratorium Maternitas,3.0,10.0,10
+Laboratorium Maternitas,3.0,11.0,1
+Laboratorium Maternitas,3.0,12.0,2
+Laboratorium Maternitas,3.0,13.0,7
+Laboratorium Maternitas,3.0,14.0,2
+Laboratorium Maternitas,4.0,7.0,4
+Laboratorium Maternitas,4.0,8.0,13
+Laboratorium Maternitas,4.0,9.0,4
+Laboratorium Maternitas,4.0,10.0,7
+Laboratorium Maternitas,4.0,11.0,2
+Laboratorium Maternitas,4.0,12.0,2
+Laboratorium Maternitas,4.0,13.0,6
+Laboratorium Maternitas,4.0,14.0,1
+Laboratorium Maternitas,4.0,15.0,1
+Laboratorium Maternitas,5.0,7.0,1
+Laboratorium Maternitas,5.0,8.0,2
+Laboratorium Maternitas,5.0,10.0,2
+Laboratorium Maternitas,5.0,11.0,2
+Laboratorium Maternitas,6.0,7.0,3
+Laboratorium Maternitas,6.0,8.0,3
+Laboratorium Maternitas,6.0,10.0,4
+Laboratorium Maternitas,6.0,11.0,1
+Laboratorium Maternitas,6.0,13.0,2

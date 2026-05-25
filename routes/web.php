@@ -15,6 +15,11 @@ use App\Http\Controllers\Admin\ItemHistoryController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\BorrowingController as AdminBorrowingController;
 
+// ============================================
+// TAMBAHKAN IMPORT UNTUK API CONTROLLER (opsional)
+// ============================================
+use App\Http\Controllers\Api\AnalyticsApiController;
+
 /*
 |--------------------------------------------------------------------------
 | PUBLIC
@@ -194,7 +199,7 @@ Route::middleware('auth')
 
     /*
     |--------------------------------------------------------------------------
-    | ANALYTICS
+    | ANALYTICS (WEB VIEW)
     |--------------------------------------------------------------------------
     */
 
@@ -202,6 +207,7 @@ Route::middleware('auth')
         '/analytics/items', 
         [AnalyticsController::class, 'alatBahan']
     )->name('admin.analytics.items');
+    
     Route::get(
         '/analytics/rooms', 
         [AnalyticsController::class, 'ruangan']
@@ -209,7 +215,7 @@ Route::middleware('auth')
 
     /*
     |--------------------------------------------------------------------------
-    | BORROWINGS
+    | BORROWINGS (ADMIN)
     |--------------------------------------------------------------------------
     */
 
@@ -232,6 +238,83 @@ Route::middleware('auth')
         '/borrowings/{borrowing}/complete',
         [AdminBorrowingController::class, 'complete']
     )->name('admin.borrowings.complete');
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| ============================================
+| TAMBAHAN ROUTE UNTUK ANALYTICS API (AI SERVICE)
+| ============================================
+| Route ini bisa diakses oleh:
+| 1. Flutter Mobile App
+| 2. JavaScript/AJAX dari web
+| 3. Postman untuk testing
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('api')->group(function () {
+
+    // ============================================
+    // ALAT & BAHAN ANALYTICS
+    // ============================================
+    
+    // Ringkasan semua alat/bahan (untuk dashboard)
+    Route::get('/analytics/alat-bahan/summary', 
+        [AnalyticsController::class, 'apiAlatBahanSummary']
+    )->name('api.analytics.alat-bahan.summary');
+    
+    // Detail prediksi stok untuk satu barang
+    Route::post('/predict/stok', 
+        [AnalyticsController::class, 'apiPredictStok']
+    )->name('api.predict.stok');
+    
+    // Prediksi kebutuhan stok untuk periode tertentu
+    Route::post('/predict/kebutuhan-stok', 
+        [AnalyticsController::class, 'apiPredictKebutuhanStok']
+    )->name('api.predict.kebutuhan-stok');
+    
+    // Daftar semua barang (master)
+    Route::get('/master/barang', 
+        [AnalyticsController::class, 'apiMasterBarang']
+    )->name('api.master.barang');
+
+    // ============================================
+    // RUANGAN ANALYTICS
+    // ============================================
+    
+    // Ringkasan semua ruangan
+    Route::get('/analytics/ruangan/summary', 
+        [AnalyticsController::class, 'apiRuanganSummary']
+    )->name('api.analytics.ruangan.summary');
+    
+    // Trend penggunaan ruangan (per bulan)
+    Route::get('/analytics/ruangan/trend', 
+        [AnalyticsController::class, 'apiRuanganTrend']
+    )->name('api.analytics.ruangan.trend');
+    
+    // Heatmap penggunaan ruangan (per jam)
+    Route::get('/analytics/ruangan/heatmap', 
+        [AnalyticsController::class, 'apiRuanganHeatmap']
+    )->name('api.analytics.ruangan.heatmap');
+    
+    // Rekomendasi ruangan kosong
+    Route::post('/predict/ruangan', 
+        [AnalyticsController::class, 'apiPredictRuangan']
+    )->name('api.predict.ruangan');
+    
+    // Daftar semua ruangan (master)
+    Route::get('/master/ruangan', 
+        [AnalyticsController::class, 'apiMasterRuangan']
+    )->name('api.master.ruangan');
+
+    // ============================================
+    // HEALTH CHECK (untuk monitoring AI Service)
+    // ============================================
+    
+    Route::get('/ai-service/health', 
+        [AnalyticsController::class, 'apiAiServiceHealth']
+    )->name('api.ai-service.health');
 
 });
 

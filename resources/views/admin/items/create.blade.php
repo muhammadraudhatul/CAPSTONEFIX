@@ -219,7 +219,7 @@
             <!-- Button -->
             <button
                 type="submit"
-                class="mt-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-2xl font-semibold shadow hover:opacity-90 transition"
+                class="mt-10 bg-gradient-to-r from-green-600 to-teal-700 text-white px-8 py-4 rounded-2xl font-semibold shadow hover:opacity-90 transition"
             >
 
                 Simpan Item

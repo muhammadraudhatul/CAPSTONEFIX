@@ -6,6 +6,7 @@
     <title>Lab Management System</title>
 
     @vite('resources/css/app.css')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 </head>
 <body class="bg-[#f5f2ff] min-h-screen flex items-center justify-center">
 
@@ -23,13 +24,13 @@
 
         <!-- Student -->
         <a href="{{ route('login') }}"
-           class="bg-white w-64 rounded-2xl shadow-md p-8 hover:scale-105 transition">
+           class="bg-white w-60 rounded-2xl shadow-sm p-8 hover:shadow-md hover:scale-105 transition-all duration-200 text-center">
 
-            <div class="w-16 h-16 mx-auto rounded-full bg-blue-500 flex items-center justify-center text-white text-3xl">
-                🎓
+            <div class="w-20 h-20 mx-auto rounded-full bg-blue-500 flex items-center justify-center">
+                <i class="ti ti-school text-4xl text-white"></i>
             </div>
 
-            <h2 class="mt-5 text-xl font-semibold">
+            <h2 class="mt-5 text-xl font-bold text-gray-800">
                 Student
             </h2>
 
@@ -40,13 +41,13 @@
 
         <!-- Admin -->
         <a href="{{ route('admin.login') }}"
-           class="bg-white w-64 rounded-2xl shadow-md p-8 hover:scale-105 transition">
+           class="bg-white w-60 rounded-2xl shadow-sm p-8 hover:shadow-md hover:scale-105 transition-all duration-200 text-center">
 
-            <div class="w-16 h-16 mx-auto rounded-full bg-purple-500 flex items-center justify-center text-white text-3xl">
-                👨‍💼
+            <div class="w-20 h-20 mx-auto rounded-full bg-purple-500 flex items-center justify-center">
+                <i class="ti ti-user-shield text-4xl text-white"></i>
             </div>
 
-            <h2 class="mt-5 text-xl font-semibold">
+            <h2 class="mt-5 text-xl font-bold text-gray-800">
                 Admin
             </h2>
 

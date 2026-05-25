@@ -376,7 +376,7 @@
             <button
                 type="submit"
                 class="w-2/3 bg-gradient-to-r
-                    from-indigo-500 to-purple-600
+                    from-green-600 to-teal-700
                     text-white py-4 rounded-2xl
                     text-lg font-semibold
                     hover:opacity-90 transition"

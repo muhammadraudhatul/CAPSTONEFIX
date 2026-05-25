@@ -6,6 +6,7 @@
     <title>Register Student</title>
 
     @vite('resources/css/app.css')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 </head>
 
 <body class="bg-[#f5f4ff] min-h-screen flex items-center justify-center py-10">
@@ -13,18 +14,16 @@
     <div class="w-full max-w-xl bg-white rounded-3xl shadow-xl overflow-hidden">
 
         <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-10 text-white relative">
+        <div class="bg-gradient-to-br from-green-600 to-teal-700 p-10 text-white relative">
 
             <a href="/"
-               class="absolute top-5 left-5 text-sm flex items-center gap-1 hover:opacity-80">
+               class="flex items-center gap-2 text-sm text-white hover:opacity-80 transition">
                 ← Kembali
             </a>
 
-            <div class="flex flex-col items-center">
+            <div class="flex flex-col items-center mt-4">
 
-                <div class="text-5xl mb-4">
-                    🎓
-                </div>
+                <i class="ti ti-school text-6xl text-white mb-4"></i>
 
                 <h1 class="text-4xl font-bold">
                     Daftar Akun Student
@@ -60,15 +59,20 @@
                         Nama Lengkap
                     </label>
 
-                    <input
-                        type="text"
-                        name="name"
-                        value="{{ old('name') }}"
-                        required
-                        autofocus
-                        placeholder="Masukkan nama lengkap"
-                        class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                    >
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                            <i class="ti ti-user text-lg"></i>
+                        </span>
+                        <input
+                            type="text"
+                            name="name"
+                            value="{{ old('name') }}"
+                            required
+                            autofocus
+                            placeholder="Masukkan nama lengkap"
+                            class="w-full pl-10 rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500"
+                        >
+                    </div>
                 </div>
 
                 <!-- NIM -->
@@ -77,14 +81,19 @@
                         NIM
                     </label>
 
-                    <input
-                        type="text"
-                        name="nim"
-                        value="{{ old('nim') }}"
-                        required
-                        placeholder="Masukkan NIM"
-                        class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                    >
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                            <i class="ti ti-id-badge text-lg"></i>
+                        </span>
+                        <input
+                            type="text"
+                            name="nim"
+                            value="{{ old('nim') }}"
+                            required
+                            placeholder="Masukkan NIM"
+                            class="w-full pl-10 rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500"
+                        >
+                    </div>
                 </div>
 
                 <!-- Password -->
@@ -93,13 +102,26 @@
                         Password
                     </label>
 
-                    <input
-                        type="password"
-                        name="password"
-                        required
-                        placeholder="Minimal 6 karakter"
-                        class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                    >
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                            <i class="ti ti-lock text-lg"></i>
+                        </span>
+                        <input
+                            type="password"
+                            name="password"
+                            id="passwordInput"
+                            required
+                            placeholder="Minimal 8 karakter"
+                            class="w-full pl-10 pr-10 rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500"
+                        >
+                        <button
+                            type="button"
+                            onclick="togglePassword('passwordInput', 'eyeIcon1')"
+                            class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
+                        >
+                            <i id="eyeIcon1" class="ti ti-eye text-lg"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Konfirmasi Password -->
@@ -108,19 +130,32 @@
                         Konfirmasi Password
                     </label>
 
-                    <input
-                        type="password"
-                        name="password_confirmation"
-                        required
-                        placeholder="Ulangi password"
-                        class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                    >
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                            <i class="ti ti-lock-check text-lg"></i>
+                        </span>
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            id="passwordConfirmInput"
+                            required
+                            placeholder="Ulangi password"
+                            class="w-full pl-10 pr-10 rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500"
+                        >
+                        <button
+                            type="button"
+                            onclick="togglePassword('passwordConfirmInput', 'eyeIcon2')"
+                            class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
+                        >
+                            <i id="eyeIcon2" class="ti ti-eye text-lg"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Button -->
                 <button
                     type="submit"
-                    class="w-full mt-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 rounded-xl text-lg font-semibold hover:opacity-90 transition"
+                    class="w-full mt-8 bg-gradient-to-r from-green-600 to-teal-700 text-white py-4 rounded-xl text-lg font-semibold hover:from-green-700 hover:to-teal-800 transition-all duration-200"
                 >
                     Daftar
                 </button>
@@ -129,7 +164,7 @@
                 <p class="text-center text-gray-500 mt-8">
                     Sudah punya akun?
                     <a href="{{ route('login') }}"
-                       class="text-purple-600 font-semibold hover:underline">
+                       class="text-teal-600 font-semibold hover:underline">
                         Login
                     </a>
                 </p>
@@ -139,6 +174,20 @@
         </div>
 
     </div>
+
+    <script>
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('ti-eye', 'ti-eye-off');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('ti-eye-off', 'ti-eye');
+            }
+        }
+    </script>
 
 </body>
 </html>

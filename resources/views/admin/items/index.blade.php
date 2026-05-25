@@ -16,7 +16,7 @@
     </div>
 
     <a href="{{ route('items.create') }}"
-       class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-4 rounded-2xl font-semibold shadow hover:opacity-90 transition">
+       class="bg-gradient-to-r from-green-600 to-teal-700 text-white px-6 py-4 rounded-2xl font-semibold shadow hover:opacity-90 transition">
 
         + Tambah Item
     </a>

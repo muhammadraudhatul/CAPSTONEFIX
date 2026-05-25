@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     @vite('resources/css/app.css')
 </head>
 
@@ -37,13 +37,12 @@
 
             <button
                 type="submit"
-                class="text-red-500 border border-red-300
-                       px-4 py-2 rounded-lg
-                       hover:bg-red-50 transition"
+                class="flex items-center gap-2 text-red-500 border border-red-200
+                    bg-red-50 px-4 py-2 rounded-xl
+                    hover:bg-red-100 transition text-sm font-medium"
             >
-
+                <i class="ti ti-logout text-base"></i>
                 Logout
-
             </button>
 
         </form>
@@ -58,7 +57,7 @@
             href="{{ route('student.borrowings.create') }}"
             class="inline-flex items-center gap-2
                    bg-gradient-to-r
-                   from-blue-500 to-purple-600
+                   from-green-600 to-teal-700
                    text-white px-5 py-3 rounded-xl
                    shadow hover:opacity-90 transition"
         >
@@ -70,10 +69,9 @@
         <!-- ACTIVE -->
         <div class="mt-8">
 
-            <h2 class="font-semibold text-lg text-gray-800 mb-4">
-
-                📦 Peminjaman Aktif
-
+            <h2 class="font-bold text-lg text-gray-800 mb-4 flex items-center gap-2">
+                <i class="ti ti-package text-green-600 text-xl"></i>
+                Peminjaman Aktif
             </h2>
 
             @forelse($activeBorrowings as $borrowing)
@@ -346,10 +344,9 @@
         <!-- HISTORY -->
         <div class="mt-10">
 
-            <h2 class="font-semibold text-lg text-gray-800 mb-4">
-
-                🕘 History Peminjaman
-
+            <h2 class="font-bold text-lg text-gray-800 mb-4 flex items-center gap-2">
+                <i class="ti ti-clock text-gray-500 text-xl"></i>
+                History Peminjaman
             </h2>
 
             <div class="bg-white rounded-2xl shadow-sm overflow-hidden">

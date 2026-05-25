@@ -32,17 +32,25 @@
 
                 <!-- Dashboard -->
                 <a href="{{ route('admin.dashboard') }}"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 font-medium">
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl
+                          text-gray-600 font-medium
+                          hover:bg-green-50 hover:text-green-700
+                          transition-colors duration-150
+                          {{ request()->routeIs('admin.dashboard') ? 'bg-green-50 text-green-700' : '' }}">
                     <i class="ti ti-layout-dashboard text-lg"></i>
                     Dashboard
                 </a>
 
                 <!-- Inventory Dropdown -->
-                <div x-data="{ open: true }">
+                <div x-data="{ open: {{ request()->routeIs('rooms.*') || request()->routeIs('items.*') ? 'true' : 'true' }} }">
 
                     <button
                         @click="open = !open"
-                        class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 font-medium">
+                        class="w-full flex items-center justify-between px-4 py-3 rounded-xl
+                               text-gray-600 font-medium
+                               hover:bg-green-50 hover:text-green-700
+                               transition-colors duration-150
+                               {{ request()->routeIs('rooms.*') || request()->routeIs('items.*') ? 'bg-green-50 text-green-700' : '' }}">
                         <div class="flex items-center gap-3">
                             <i class="ti ti-package text-lg"></i>
                             Inventory
@@ -54,13 +62,21 @@
                     <div x-show="open" x-transition class="ml-4 mt-1 space-y-1">
 
                         <a href="{{ route('rooms.index') }}"
-                           class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-gray-100 text-gray-600 text-sm">
+                           class="flex items-center gap-3 px-4 py-2.5 rounded-xl
+                                  text-gray-600 text-sm
+                                  hover:bg-green-50 hover:text-green-700
+                                  transition-colors duration-150
+                                  {{ request()->routeIs('rooms.*') ? 'bg-green-50 text-green-700 font-medium' : '' }}">
                             <i class="ti ti-building text-base"></i>
                             Ruangan
                         </a>
 
                         <a href="{{ route('items.index') }}"
-                           class="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-violet-50 text-violet-700 text-sm font-medium">
+                           class="flex items-center gap-3 px-4 py-2.5 rounded-xl
+                                  text-gray-600 text-sm
+                                  hover:bg-green-50 hover:text-green-700
+                                  transition-colors duration-150
+                                  {{ request()->routeIs('items.*') ? 'bg-green-50 text-green-700 font-medium' : '' }}">
                             <i class="ti ti-flask text-base"></i>
                             Alat dan Bahan
                         </a>
@@ -71,24 +87,36 @@
 
                 <!-- History -->
                 <a href="{{ route('item-histories.index') }}"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 font-medium">
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl
+                          text-gray-600 font-medium
+                          hover:bg-green-50 hover:text-green-700
+                          transition-colors duration-150
+                          {{ request()->routeIs('item-histories.*') ? 'bg-green-50 text-green-700' : '' }}">
                     <i class="ti ti-trending-up text-lg"></i>
                     History
                 </a>
 
                 <!-- Peminjaman -->
                 <a href="{{ route('admin.borrowings.index') }}"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 font-medium">
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl
+                          text-gray-600 font-medium
+                          hover:bg-green-50 hover:text-green-700
+                          transition-colors duration-150
+                          {{ request()->routeIs('admin.borrowings.*') ? 'bg-green-50 text-green-700' : '' }}">
                     <i class="ti ti-clipboard-list text-lg"></i>
                     Peminjaman
                 </a>
 
                 <!-- Analytics Dropdown -->
-                <div x-data="{ open: false }">
+                <div x-data="{ open: {{ request()->routeIs('admin.analytics.*') ? 'true' : 'false' }} }">
 
                     <button
                         @click="open = !open"
-                        class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 font-medium">
+                        class="w-full flex items-center justify-between px-4 py-3 rounded-xl
+                               text-gray-600 font-medium
+                               hover:bg-green-50 hover:text-green-700
+                               transition-colors duration-150
+                               {{ request()->routeIs('admin.analytics.*') ? 'bg-green-50 text-green-700' : '' }}">
                         <div class="flex items-center gap-3">
                             <i class="ti ti-chart-bar text-lg"></i>
                             Analytics
@@ -98,14 +126,23 @@
                     </button>
 
                     <div x-show="open" x-transition class="ml-4 mt-1 space-y-1">
+
                         <a href="{{ route('admin.analytics.items') }}"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-gray-100 text-gray-600 text-sm">
+                           class="flex items-center gap-3 px-4 py-2.5 rounded-xl
+                                  text-gray-600 text-sm
+                                  hover:bg-green-50 hover:text-green-700
+                                  transition-colors duration-150
+                                  {{ request()->routeIs('admin.analytics.items') ? 'bg-green-50 text-green-700 font-medium' : '' }}">
                             <i class="ti ti-flask text-base"></i>
                             Alat dan Bahan
                         </a>
 
                         <a href="{{ route('admin.analytics.rooms') }}"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-gray-100 text-gray-600 text-sm">
+                           class="flex items-center gap-3 px-4 py-2.5 rounded-xl
+                                  text-gray-600 text-sm
+                                  hover:bg-green-50 hover:text-green-700
+                                  transition-colors duration-150
+                                  {{ request()->routeIs('admin.analytics.rooms') ? 'bg-green-50 text-green-700 font-medium' : '' }}">
                             <i class="ti ti-building text-base"></i>
                             Ruangan
                         </a>
@@ -124,7 +161,9 @@
                 @csrf
                 <button
                     type="submit"
-                    class="w-full bg-red-50 text-red-500 py-2.5 rounded-xl hover:bg-red-100 transition text-sm font-medium">
+                    class="w-full bg-red-50 text-red-500 py-2.5 rounded-xl
+                           hover:bg-red-100 transition-colors duration-150
+                           text-sm font-medium">
                     Logout
                 </button>
             </form>

@@ -51,7 +51,7 @@
 
     <!-- Content -->
     <div class="p-8">
-
+        <x-alert-error />
         <!-- Create -->
         <a
             href="{{ route('student.borrowings.create') }}"
@@ -310,15 +310,37 @@
                             @elseif($borrowing->status == 'CANCELLED')
 
                                 <span class="bg-gray-200
-                                             text-gray-700
-                                             px-4 py-2
-                                             rounded-xl
-                                             text-sm
-                                             font-semibold">
+                                            text-gray-700
+                                            px-4 py-2
+                                            rounded-xl
+                                            text-sm
+                                            font-semibold">
 
                                     CANCELLED
 
                                 </span>
+
+                                @if($borrowing->cancel_reason)
+
+                                    <div class="mt-4 bg-red-50
+                                                border border-red-200
+                                                rounded-xl p-4 text-left">
+
+                                        <p class="text-sm font-semibold text-red-700">
+
+                                            Peminjaman dibatalkan admin
+
+                                        </p>
+
+                                        <p class="text-sm text-red-600 mt-2">
+
+                                            {{ $borrowing->cancel_reason }}
+
+                                        </p>
+
+                                    </div>
+
+                                @endif
 
                             @endif
 
@@ -434,7 +456,83 @@
                                 <!-- STATUS -->
                                 <td class="px-6 py-5">
 
-                                    {{ $history->status }}
+                                    <!-- STATUS BADGE -->
+                                    @if($history->status == 'COMPLETED')
+
+                                        <span class="bg-gray-100
+                                                    text-gray-700
+                                                    px-3 py-1
+                                                    rounded-xl
+                                                    text-sm
+                                                    font-semibold">
+
+                                            COMPLETED
+
+                                        </span>
+
+                                    @elseif($history->status == 'REJECTED')
+
+                                        <span class="bg-red-100
+                                                    text-red-700
+                                                    px-3 py-1
+                                                    rounded-xl
+                                                    text-sm
+                                                    font-semibold">
+
+                                            REJECTED
+
+                                        </span>
+
+                                    @elseif($history->status == 'CANCELLED')
+
+                                        <span class="bg-gray-200
+                                                    text-gray-700
+                                                    px-3 py-1
+                                                    rounded-xl
+                                                    text-sm
+                                                    font-semibold">
+
+                                            CANCELLED
+
+                                        </span>
+
+                                        @if($history->cancel_reason)
+
+                                            <div class="mt-3
+                                                        bg-red-50
+                                                        border border-red-200
+                                                        rounded-xl
+                                                        p-3">
+
+                                                <p class="text-xs
+                                                        font-semibold
+                                                        text-red-700">
+
+                                                    Dibatalkan Admin
+
+                                                </p>
+
+                                                <p class="text-sm
+                                                        text-red-600
+                                                        mt-1">
+
+                                                    {{ $history->cancel_reason }}
+
+                                                </p>
+
+                                            </div>
+
+                                        @endif
+
+                                    @else
+
+                                        <span class="text-gray-700">
+
+                                            {{ $history->status }}
+
+                                        </span>
+
+                                    @endif
 
                                 </td>
 

@@ -285,6 +285,18 @@
                                     REJECTED
 
                                 </span>
+                            @elseif($borrowing->status == 'CANCELLED')
+
+                                    <span class="bg-gray-200
+                                                text-gray-700
+                                                px-4 py-2
+                                                rounded-xl
+                                                text-sm
+                                                font-semibold">
+
+                                        CANCELLED
+
+                                    </span>
 
                             @endif
 
@@ -294,6 +306,45 @@
                         <td class="px-6 py-6">
 
                             <div class="flex flex-col gap-3">
+
+                                @if(
+                                    session('error_borrowing_id')
+                                    == $borrowing->id
+                                )
+
+                                    <div class="mb-4 bg-red-50
+                                                border border-red-200
+                                                rounded-2xl p-5">
+
+                                        <div class="flex gap-3">
+
+                                            <div class="text-red-500 text-2xl">
+
+                                                ⚠️
+
+                                            </div>
+
+                                            <div>
+
+                                                <p class="font-bold text-red-700">
+
+                                                    Terjadi Kesalahan
+
+                                                </p>
+
+                                                <p class="text-red-600 mt-1">
+
+                                                    {{ session('error_message') }}
+
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                @endif
 
                                 <!-- APPROVE -->
                                 @if($borrowing->status == 'PENDING')
@@ -368,6 +419,55 @@
                                         >
 
                                             Confirm Return
+
+                                        </button>
+
+                                    </form>
+
+                                @endif
+
+                                <!-- ADMIN CANCEL -->
+                                @if(
+                                    in_array(
+                                        $borrowing->status,
+                                        [
+
+                                            'APPROVED',
+                                            'WAITING_RETURN',
+
+                                        ]
+                                    )
+                                )
+
+                                    <form
+                                        method="POST"
+                                        action="{{ route(
+                                            'admin.borrowings.cancel',
+                                            $borrowing
+                                        ) }}"
+                                    >
+
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <textarea
+                                            name="cancel_reason"
+                                            required
+                                            placeholder="Alasan pembatalan..."
+                                            class="w-full border rounded-xl
+                                                px-3 py-2 text-sm"
+                                        ></textarea>
+
+                                        <button
+                                            onclick="return confirm(
+                                                'Batalkan peminjaman ini?'
+                                            )"
+                                            class="mt-2 w-full bg-red-600
+                                                text-white px-4 py-2
+                                                rounded-xl hover:bg-red-700"
+                                        >
+
+                                            Cancel Borrowing
 
                                         </button>
 

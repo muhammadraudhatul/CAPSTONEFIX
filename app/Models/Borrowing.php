@@ -20,6 +20,15 @@ class Borrowing extends Model
         'status',
         'returned_at',
 
+        /*
+        |--------------------------------------------------------------------------
+        | ADMIN CANCEL
+        |--------------------------------------------------------------------------
+        */
+
+        'cancelled_by',
+        'cancel_reason',
+
     ];
 
     public function user()
@@ -35,5 +44,19 @@ class Borrowing extends Model
     public function items()
     {
         return $this->hasMany(BorrowingItem::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CANCELLED BY
+    |--------------------------------------------------------------------------
+    */
+
+    public function cancelledBy()
+    {
+        return $this->belongsTo(
+            User::class,
+            'cancelled_by'
+        );
     }
 }

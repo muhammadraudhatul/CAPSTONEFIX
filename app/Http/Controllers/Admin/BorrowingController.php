@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Borrowing;
-use App\Models\Item;
 use App\Models\ItemHistory;
 use App\Models\RoomSchedule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class BorrowingController extends Controller
 {
@@ -44,12 +44,6 @@ class BorrowingController extends Controller
 
     public function approve(Borrowing $borrowing)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | ONLY PENDING
-        |--------------------------------------------------------------------------
-        */
-
         if (
             $borrowing->status != 'PENDING'
         ) {
@@ -96,12 +90,64 @@ class BorrowingController extends Controller
         if (!$schedule)
         {
             return back()
-                ->withErrors([
+                ->with(
 
-                    'room' =>
-                        'Ruangan sudah tidak tersedia.'
+                    'error_borrowing_id',
+                    $borrowing->id
 
-                ]);
+                )->with(
+
+                    'error_message',
+                    'Ruangan sudah tidak tersedia.'
+
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDATE STOCK RESERVATION
+        |--------------------------------------------------------------------------
+        */
+
+        foreach (
+            $borrowing->items as $borrowedItem
+        ) {
+
+            $item =
+                $borrowedItem->item;
+
+            $reservedQty =
+                $item->getReservedQty(
+
+                    $borrowing->borrow_date,
+
+                    $borrowing->time_slot,
+
+                    $borrowing->id
+
+                );
+
+            $availableStock =
+                $item->stock -
+                $reservedQty;
+
+            if (
+                $borrowedItem->qty >
+                $availableStock
+            ) {
+                return back()
+                    ->with(
+
+                        'error_borrowing_id',
+                        $borrowing->id
+
+                    )->with(
+
+                        'error_message',
+                        'Stock item tidak cukup.'
+
+                    );
+            }
         }
 
         /*
@@ -117,7 +163,7 @@ class BorrowingController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | REDUCE STOCK
+            | HISTORY RESERVATION
             |--------------------------------------------------------------------------
             */
 
@@ -125,61 +171,10 @@ class BorrowingController extends Controller
                 $borrowing->items as $borrowedItem
             ) {
 
-                $item =
-                    $borrowedItem->item;
-
-                /*
-                |--------------------------------------------------------------------------
-                | VALIDATE STOCK
-                |--------------------------------------------------------------------------
-                */
-
-                if (
-                    $borrowedItem->qty >
-                    $item->stock
-                ) {
-                    abort(
-                        400,
-                        'Stock item tidak cukup.'
-                    );
-                }
-
-                $oldStock =
-                    $item->stock;
-
-                /*
-                |--------------------------------------------------------------------------
-                | REDUCE STOCK
-                |--------------------------------------------------------------------------
-                */
-
-                Item::withoutEvents(function () use (
-                    $item,
-                    $borrowedItem
-                ) {
-
-                    $item->decrement(
-
-                        'stock',
-
-                        $borrowedItem->qty
-
-                    );
-
-                });
-
-                $item->refresh();
-
-                /*
-                |--------------------------------------------------------------------------
-                | HISTORY
-                |--------------------------------------------------------------------------
-                */
-
                 ItemHistory::create([
 
                     'item_id' =>
-                        $item->id,
+                        $borrowedItem->item->id,
 
                     'user_id' =>
                         auth()->id(),
@@ -188,16 +183,10 @@ class BorrowingController extends Controller
                         'borrow',
 
                     'item_name' =>
-                        $item->name,
-
-                    'old_stock' =>
-                        $oldStock,
-
-                    'new_stock' =>
-                        $item->stock,
+                        $borrowedItem->item->name,
 
                     'description' =>
-                        'Dipinjam mahasiswa',
+                        'Item direservasi untuk peminjaman',
 
                 ]);
             }
@@ -232,7 +221,7 @@ class BorrowingController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | UPDATE STATUS
+            | APPROVED
             |--------------------------------------------------------------------------
             */
 
@@ -254,12 +243,6 @@ class BorrowingController extends Controller
 
     public function reject(Borrowing $borrowing)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | ONLY PENDING
-        |--------------------------------------------------------------------------
-        */
-
         if (
             $borrowing->status != 'PENDING'
         ) {
@@ -283,23 +266,11 @@ class BorrowingController extends Controller
 
     public function complete(Borrowing $borrowing)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | ONLY WAITING RETURN
-        |--------------------------------------------------------------------------
-        */
-
         if (
             $borrowing->status != 'WAITING_RETURN'
         ) {
             return back();
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | DATE
-        |--------------------------------------------------------------------------
-        */
 
         $date = Carbon::parse(
             $borrowing->borrow_date
@@ -310,12 +281,6 @@ class BorrowingController extends Controller
             ->startOfWeek(Carbon::MONDAY)
             ->format('Y-m-d');
 
-        /*
-        |--------------------------------------------------------------------------
-        | TRANSACTION
-        |--------------------------------------------------------------------------
-        */
-
         DB::transaction(function () use (
             $borrowing,
             $weekStart
@@ -323,7 +288,7 @@ class BorrowingController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | RETURN STOCK
+            | FINAL STOCK REDUCTION
             |--------------------------------------------------------------------------
             */
 
@@ -334,62 +299,53 @@ class BorrowingController extends Controller
                 $item =
                     $borrowedItem->item;
 
-                $oldStock =
-                    $item->stock;
+                $usedQty =
+                    $borrowedItem->qty -
+                    $borrowedItem->returned_qty;
 
                 /*
                 |--------------------------------------------------------------------------
-                | RETURN STOCK
+                | ONLY IF USED / LOST
                 |--------------------------------------------------------------------------
                 */
 
-                Item::withoutEvents(function () use (
-                    $item,
-                    $borrowedItem
-                ) {
+                if ($usedQty > 0)
+                {
+                    $oldStock =
+                        $item->stock;
 
-                    $item->increment(
-
+                    $item->decrement(
                         'stock',
-
-                        $borrowedItem->returned_qty
-
+                        $usedQty
                     );
 
-                });
+                    $item->refresh();
 
-                $item->refresh();
+                    ItemHistory::create([
 
-                /*
-                |--------------------------------------------------------------------------
-                | HISTORY
-                |--------------------------------------------------------------------------
-                */
+                        'item_id' =>
+                            $item->id,
 
-                ItemHistory::create([
+                        'user_id' =>
+                            auth()->id(),
 
-                    'item_id' =>
-                        $item->id,
+                        'action' =>
+                            'stock_used',
 
-                    'user_id' =>
-                        auth()->id(),
+                        'item_name' =>
+                            $item->name,
 
-                    'action' =>
-                        'return',
+                        'old_stock' =>
+                            $oldStock,
 
-                    'item_name' =>
-                        $item->name,
+                        'new_stock' =>
+                            $item->stock,
 
-                    'old_stock' =>
-                        $oldStock,
+                        'description' =>
+                            'Stock berkurang setelah peminjaman selesai',
 
-                    'new_stock' =>
-                        $item->stock,
-
-                    'description' =>
-                        'Pengembalian alat/bahan',
-
-                ]);
+                    ]);
+                }
             }
 
             /*
@@ -431,6 +387,115 @@ class BorrowingController extends Controller
                 'status' => 'COMPLETED',
 
                 'returned_at' => now(),
+
+            ]);
+        });
+
+        return back();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN CANCEL
+    |--------------------------------------------------------------------------
+    */
+
+    public function adminCancel(
+        Request $request,
+        Borrowing $borrowing
+    ) {
+
+        /*
+        |--------------------------------------------------------------------------
+        | ONLY ACTIVE
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            !in_array(
+                $borrowing->status,
+                [
+
+                    'APPROVED',
+                    'WAITING_RETURN',
+
+                ]
+            )
+        ) {
+            return back();
+        }
+
+        $request->validate([
+
+            'cancel_reason' =>
+                'required|string|max:1000',
+
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | DATE
+        |--------------------------------------------------------------------------
+        */
+
+        $date = Carbon::parse(
+            $borrowing->borrow_date
+        );
+
+        $weekStart = $date
+            ->copy()
+            ->startOfWeek(Carbon::MONDAY)
+            ->format('Y-m-d');
+
+        DB::transaction(function () use (
+            $borrowing,
+            $weekStart,
+            $request
+        ) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | UNLOCK ROOM
+            |--------------------------------------------------------------------------
+            */
+
+            RoomSchedule::where(
+                    'room_id',
+                    $borrowing->room_id
+                )
+                ->where(
+                    'week_start',
+                    $weekStart
+                )
+                ->where(
+                    'day',
+                    $borrowing->day
+                )
+                ->where(
+                    'time_slot',
+                    $borrowing->time_slot
+                )
+                ->update([
+
+                    'available' => true
+
+                ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | CANCEL
+            |--------------------------------------------------------------------------
+            */
+
+            $borrowing->update([
+
+                'status' => 'CANCELLED',
+
+                'cancelled_by' =>
+                    auth()->id(),
+
+                'cancel_reason' =>
+                    $request->cancel_reason,
 
             ]);
         });

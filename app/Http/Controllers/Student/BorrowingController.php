@@ -125,28 +125,15 @@ class BorrowingController extends Controller
         $request->validate([
 
             'borrow_date' => 'required|date',
-
             'room_id' => 'required',
-
             'time_slot' => 'required',
-
             'purpose' => 'required',
-
             'total_people' => 'required|integer',
-
             'with_lecturer' => 'required',
-
             'lecturer_name' => 'nullable',
-
             'items' => 'required|array',
 
         ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | DAY
-        |--------------------------------------------------------------------------
-        */
 
         $day = $this->getDayName(
             $request->borrow_date
@@ -154,7 +141,7 @@ class BorrowingController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | VALIDATE SCHEDULE
+        | VALIDATE ROOM
         |--------------------------------------------------------------------------
         */
 
@@ -202,6 +189,51 @@ class BorrowingController extends Controller
 
         /*
         |--------------------------------------------------------------------------
+        | VALIDATE RESERVED STOCK
+        |--------------------------------------------------------------------------
+        */
+
+        foreach ($request->items as $item)
+        {
+            if (
+                !empty($item['item_id']) &&
+                !empty($item['qty'])
+            ) {
+
+                $itemModel = Item::find(
+                    $item['item_id']
+                );
+
+                $reservedQty =
+                    $itemModel->getReservedQty(
+
+                        $request->borrow_date,
+
+                        $request->time_slot
+
+                    );
+
+                $availableStock =
+                    $itemModel->stock -
+                    $reservedQty;
+
+                if (
+                    $item['qty'] >
+                    $availableStock
+                ) {
+                    return back()
+                        ->withErrors([
+
+                            'stock' =>
+                                'Stock item tidak cukup.'
+
+                        ]);
+                }
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
         | TRANSACTION
         |--------------------------------------------------------------------------
         */
@@ -210,12 +242,6 @@ class BorrowingController extends Controller
             $request,
             $day
         ) {
-
-            /*
-            |--------------------------------------------------------------------------
-            | CREATE BORROWING
-            |--------------------------------------------------------------------------
-            */
 
             $borrowing = Borrowing::create([
 
@@ -249,38 +275,12 @@ class BorrowingController extends Controller
 
             ]);
 
-            /*
-            |--------------------------------------------------------------------------
-            | ITEMS
-            |--------------------------------------------------------------------------
-            */
-
-            foreach ($request->items as $item) {
-
+            foreach ($request->items as $item)
+            {
                 if (
                     !empty($item['item_id']) &&
                     !empty($item['qty'])
                 ) {
-
-                    $itemModel = Item::find(
-                        $item['item_id']
-                    );
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | VALIDATE STOCK
-                    |--------------------------------------------------------------------------
-                    */
-
-                    if (
-                        $item['qty'] >
-                        $itemModel->stock
-                    ) {
-                        abort(
-                            400,
-                            'Stock item tidak cukup.'
-                        );
-                    }
 
                     BorrowingItem::create([
 
@@ -314,12 +314,6 @@ class BorrowingController extends Controller
         $this->authorizeBorrowing(
             $borrowing
         );
-
-        /*
-        |--------------------------------------------------------------------------
-        | ONLY PENDING
-        |--------------------------------------------------------------------------
-        */
 
         if (
             $borrowing->status != 'PENDING'
@@ -359,12 +353,6 @@ class BorrowingController extends Controller
             $borrowing
         );
 
-        /*
-        |--------------------------------------------------------------------------
-        | ONLY PENDING
-        |--------------------------------------------------------------------------
-        */
-
         if (
             $borrowing->status != 'PENDING'
         ) {
@@ -374,26 +362,14 @@ class BorrowingController extends Controller
         $request->validate([
 
             'borrow_date' => 'required|date',
-
             'room_id' => 'required',
-
             'time_slot' => 'required',
-
             'purpose' => 'required',
-
             'total_people' => 'required|integer',
-
             'with_lecturer' => 'required',
-
             'items' => 'required|array',
 
         ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | DAY
-        |--------------------------------------------------------------------------
-        */
 
         $day = $this->getDayName(
             $request->borrow_date
@@ -401,7 +377,7 @@ class BorrowingController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | VALIDATE SCHEDULE
+        | VALIDATE ROOM
         |--------------------------------------------------------------------------
         */
 
@@ -449,6 +425,53 @@ class BorrowingController extends Controller
 
         /*
         |--------------------------------------------------------------------------
+        | VALIDATE RESERVED STOCK
+        |--------------------------------------------------------------------------
+        */
+
+        foreach ($request->items as $item)
+        {
+            if (
+                !empty($item['item_id']) &&
+                !empty($item['qty'])
+            ) {
+
+                $itemModel = Item::find(
+                    $item['item_id']
+                );
+
+                $reservedQty =
+                    $itemModel->getReservedQty(
+
+                        $request->borrow_date,
+
+                        $request->time_slot,
+
+                        $borrowing->id
+
+                    );
+
+                $availableStock =
+                    $itemModel->stock -
+                    $reservedQty;
+
+                if (
+                    $item['qty'] >
+                    $availableStock
+                ) {
+                    return back()
+                        ->withErrors([
+
+                            'stock' =>
+                                'Stock item tidak cukup.'
+
+                        ]);
+                }
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
         | TRANSACTION
         |--------------------------------------------------------------------------
         */
@@ -458,12 +481,6 @@ class BorrowingController extends Controller
             $borrowing,
             $day
         ) {
-
-            /*
-            |--------------------------------------------------------------------------
-            | UPDATE BORROWING
-            |--------------------------------------------------------------------------
-            */
 
             $borrowing->update([
 
@@ -493,40 +510,14 @@ class BorrowingController extends Controller
 
             ]);
 
-            /*
-            |--------------------------------------------------------------------------
-            | RESET ITEMS
-            |--------------------------------------------------------------------------
-            */
-
             $borrowing->items()->delete();
 
-            foreach ($request->items as $item) {
-
+            foreach ($request->items as $item)
+            {
                 if (
                     !empty($item['item_id']) &&
                     !empty($item['qty'])
                 ) {
-
-                    $itemModel = Item::find(
-                        $item['item_id']
-                    );
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | VALIDATE STOCK
-                    |--------------------------------------------------------------------------
-                    */
-
-                    if (
-                        $item['qty'] >
-                        $itemModel->stock
-                    ) {
-                        abort(
-                            400,
-                            'Stock item tidak cukup.'
-                        );
-                    }
 
                     BorrowingItem::create([
 
@@ -551,7 +542,7 @@ class BorrowingController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | DELETE PENDING
+    | DELETE
     |--------------------------------------------------------------------------
     */
 
@@ -560,12 +551,6 @@ class BorrowingController extends Controller
         $this->authorizeBorrowing(
             $borrowing
         );
-
-        /*
-        |--------------------------------------------------------------------------
-        | ONLY PENDING
-        |--------------------------------------------------------------------------
-        */
 
         if (
             $borrowing->status != 'PENDING'
@@ -580,7 +565,7 @@ class BorrowingController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | CANCEL APPROVED
+    | CANCEL
     |--------------------------------------------------------------------------
     */
 
@@ -589,12 +574,6 @@ class BorrowingController extends Controller
         $this->authorizeBorrowing(
             $borrowing
         );
-
-        /*
-        |--------------------------------------------------------------------------
-        | ONLY APPROVED
-        |--------------------------------------------------------------------------
-        */
 
         if (
             $borrowing->status != 'APPROVED'
@@ -606,56 +585,15 @@ class BorrowingController extends Controller
             $borrowing
         ) {
 
-            /*
-            |--------------------------------------------------------------------------
-            | RETURN STOCK
-            |--------------------------------------------------------------------------
-            */
-
             foreach (
                 $borrowing->items
                 as $borrowedItem
             ) {
 
-                $item =
-                    $borrowedItem->item;
-
-                $oldStock =
-                    $item->stock;
-
-                /*
-                |--------------------------------------------------------------------------
-                | RETURN STOCK
-                |--------------------------------------------------------------------------
-                */
-
-                Item::withoutEvents(function () use (
-                    $item,
-                    $borrowedItem
-                ) {
-
-                    $item->increment(
-
-                        'stock',
-
-                        $borrowedItem->qty
-
-                    );
-
-                });
-
-                $item->refresh();
-
-                /*
-                |--------------------------------------------------------------------------
-                | HISTORY
-                |--------------------------------------------------------------------------
-                */
-
                 ItemHistory::create([
 
                     'item_id' =>
-                        $item->id,
+                        $borrowedItem->item->id,
 
                     'user_id' =>
                         auth()->id(),
@@ -664,25 +602,13 @@ class BorrowingController extends Controller
                         'cancel',
 
                     'item_name' =>
-                        $item->name,
-
-                    'old_stock' =>
-                        $oldStock,
-
-                    'new_stock' =>
-                        $item->stock,
+                        $borrowedItem->item->name,
 
                     'description' =>
-                        'Peminjaman dibatalkan',
+                        'Peminjaman dibatalkan mahasiswa',
 
                 ]);
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | UNLOCK ROOM
-            |--------------------------------------------------------------------------
-            */
 
             $date = Carbon::parse(
                 $borrowing->borrow_date
@@ -714,12 +640,6 @@ class BorrowingController extends Controller
                     'available' => true
 
                 ]);
-
-            /*
-            |--------------------------------------------------------------------------
-            | CANCELLED
-            |--------------------------------------------------------------------------
-            */
 
             $borrowing->update([
 
@@ -776,12 +696,6 @@ class BorrowingController extends Controller
                 $request->returned_qty[
                     $borrowedItem->id
                 ] ?? 0;
-
-            /*
-            |--------------------------------------------------------------------------
-            | MAX VALIDATION
-            |--------------------------------------------------------------------------
-            */
 
             if (
                 $returnedQty >

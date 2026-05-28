@@ -42,6 +42,8 @@
         Isi form peminjaman laboratorium
     </p>
 
+    <x-alert-error />
+    
     <form
         method="POST"
         action="{{ route('student.borrowings.store') }}"

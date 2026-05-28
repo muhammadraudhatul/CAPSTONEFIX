@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | INDEX
+    |--------------------------------------------------------------------------
+    */
+
     public function index(Request $request)
     {
         $search = $request->search;
@@ -17,82 +23,296 @@ class ItemController extends Controller
 
             ->when($search, function ($query) use ($search) {
 
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('location', 'like', "%{$search}%");
+                $query->where(function ($q) use ($search) {
+
+                    $q->where(
+                        'name',
+                        'like',
+                        "%{$search}%"
+                    )
+                    ->orWhere(
+                        'location',
+                        'like',
+                        "%{$search}%"
+                    );
+
+                });
 
             })
 
             ->latest()
             ->get();
 
-        $tools = $items->where('type', 'tool');
+        /*
+        |--------------------------------------------------------------------------
+        | GROUPING
+        |--------------------------------------------------------------------------
+        */
 
-        $materials = $items->where('type', 'material');
+        $tools = $items
+            ->where('type', 'tool')
+            ->groupBy('name');
 
-        return view('admin.items.index', compact(
-            'tools',
-            'materials',
-            'search'
-        ));
+        $materials = $items
+            ->where('type', 'material')
+            ->groupBy('name');
+
+        return view(
+            'admin.items.index',
+            compact(
+                'tools',
+                'materials',
+                'search'
+            )
+        );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CREATE
+    |--------------------------------------------------------------------------
+    */
 
     public function create()
     {
         $rooms = Room::all();
 
-        return view('admin.items.create', compact('rooms'));
+        return view(
+            'admin.items.create',
+            compact('rooms')
+        );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | STORE
+    |--------------------------------------------------------------------------
+    */
 
     public function store(Request $request)
     {
         $request->validate([
+
             'name' => 'required',
+
             'type' => 'required',
+
             'room_id' => 'required',
+
             'location' => 'required',
+
             'unit' => 'required',
-            'stock' => 'required|integer|min:0',
-            'minimum_stock' => 'required|integer|min:0',
+
+            'stock' =>
+                'required|integer|min:0',
+
+            'minimum_stock' =>
+                'required|integer|min:0',
+
         ]);
 
-        Item::create($request->all());
+        /*
+        |--------------------------------------------------------------------------
+        | DUPLICATE CHECK
+        |--------------------------------------------------------------------------
+        |
+        | Sama persis:
+        | - nama
+        | - room
+        | - lokasi
+        |
+        | Maka stock ditambahkan saja
+        |
+        */
+
+        $existingItem = Item::where(
+
+                'name',
+                $request->name
+
+            )
+            ->where(
+                'room_id',
+                $request->room_id
+            )
+            ->where(
+                'location',
+                $request->location
+            )
+            ->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE STOCK
+        |--------------------------------------------------------------------------
+        */
+
+        if ($existingItem)
+        {
+            $existingItem->increment(
+
+                'stock',
+
+                $request->stock
+
+            );
+
+            return redirect()
+                ->route('items.index')
+                ->with([
+
+                    'success' =>
+                        'Stock item berhasil ditambahkan.'
+
+                ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE NEW
+        |--------------------------------------------------------------------------
+        */
+
+        Item::create([
+
+            'name' =>
+                $request->name,
+
+            'type' =>
+                $request->type,
+
+            'room_id' =>
+                $request->room_id,
+
+            'location' =>
+                $request->location,
+
+            'unit' =>
+                $request->unit,
+
+            'stock' =>
+                $request->stock,
+
+            'minimum_stock' =>
+                $request->minimum_stock,
+
+            'description' =>
+                $request->description,
+
+        ]);
 
         return redirect()
-            ->route('items.index');
+            ->route('items.index')
+            ->with([
+
+                'success' =>
+                    'Item berhasil ditambahkan.'
+
+            ]);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | EDIT
+    |--------------------------------------------------------------------------
+    */
 
     public function edit(Item $item)
     {
         $rooms = Room::all();
 
-        return view('admin.items.edit', compact(
-            'item',
-            'rooms'
-        ));
+        return view(
+            'admin.items.edit',
+            compact(
+                'item',
+                'rooms'
+            )
+        );
     }
 
-    public function update(Request $request, Item $item)
-    {
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE
+    |--------------------------------------------------------------------------
+    */
+
+    public function update(
+        Request $request,
+        Item $item
+    ) {
         $request->validate([
+
             'name' => 'required',
+
             'type' => 'required',
+
             'room_id' => 'required',
+
             'location' => 'required',
+
             'unit' => 'required',
-            'stock' => 'required|integer|min:0',
-            'minimum_stock' => 'required|integer|min:0',
+
+            'stock' =>
+                'required|integer|min:0',
+
+            'minimum_stock' =>
+                'required|integer|min:0',
+
         ]);
 
-        $item->update($request->all());
+        $item->update([
+
+            'name' =>
+                $request->name,
+
+            'type' =>
+                $request->type,
+
+            'room_id' =>
+                $request->room_id,
+
+            'location' =>
+                $request->location,
+
+            'unit' =>
+                $request->unit,
+
+            'stock' =>
+                $request->stock,
+
+            'minimum_stock' =>
+                $request->minimum_stock,
+
+            'description' =>
+                $request->description,
+
+        ]);
 
         return redirect()
-            ->route('items.index');
+            ->route('items.index')
+            ->with([
+
+                'success' =>
+                    'Item berhasil diperbarui.'
+
+            ]);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE
+    |--------------------------------------------------------------------------
+    */
 
     public function destroy(Item $item)
     {
         $item->delete();
 
-        return back();
+        return back()->with([
+
+            'success' =>
+                'Item berhasil dihapus.'
+
+        ]);
     }
 }

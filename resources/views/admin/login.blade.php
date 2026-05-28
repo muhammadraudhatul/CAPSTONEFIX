@@ -96,7 +96,7 @@
 
             <button
                 type="submit"
-                class="w-full mt-8 bg-gradient-to-r from-green-400 to-teal-500 text-white py-4 rounded-xl font-bold hover:from-green-500 hover:to-teal-600 transition-all duration-200"
+                class="w-full mt-8 bg-gradient-to-r from-green-600 to-teal-700 text-white py-4 rounded-xl font-bold hover:from-green-500 hover:to-teal-600 transition-all duration-200"
             >
                 Login
             </button>

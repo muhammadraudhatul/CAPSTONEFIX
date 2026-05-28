@@ -219,25 +219,25 @@ Route::middleware('auth')
     |--------------------------------------------------------------------------
     */
 
-    Route::get(
-        '/borrowings',
+    Route::get('/borrowings',
         [AdminBorrowingController::class, 'index']
     )->name('admin.borrowings.index');
 
-    Route::patch(
-        '/borrowings/{borrowing}/approve',
+    Route::patch('/borrowings/{borrowing}/approve',
         [AdminBorrowingController::class, 'approve']
     )->name('admin.borrowings.approve');
 
-    Route::patch(
-        '/borrowings/{borrowing}/reject',
+    Route::patch('/borrowings/{borrowing}/reject',
         [AdminBorrowingController::class, 'reject']
     )->name('admin.borrowings.reject');
 
-    Route::patch(
-        '/borrowings/{borrowing}/complete',
+    Route::patch('/borrowings/{borrowing}/complete',
         [AdminBorrowingController::class, 'complete']
     )->name('admin.borrowings.complete');
+
+    Route::patch('/borrowings/{borrowing}/admin-cancel',
+        [AdminBorrowingController::class, 'adminCancel']
+    )->name('admin.borrowings.cancel');
 
 });
 

@@ -262,8 +262,7 @@ class AnalyticsController extends Controller
                 // =========================================================
                 // SQLite tidak memiliki TIMESTAMPDIFF, hitung manual
                 $borrowings = Borrowing::where('room_id', $selected_room->id)
-                    ->whereNotNull('start_time')
-                    ->whereNotNull('end_time')
+                    ->whereNotNull('time_slot')
                     ->get();
                 
                 if ($borrowings->isNotEmpty()) {
@@ -271,10 +270,14 @@ class AnalyticsController extends Controller
                     $count = 0;
                     foreach ($borrowings as $borrow) {
                         try {
-                            $start = strtotime($borrow->start_time);
-                            $end = strtotime($borrow->end_time);
+                            // Pecah time_slot: "07:30 - 08:30"
+                            [$startTime, $endTime] = explode(' - ', $borrow->time_slot);
+
+                            $start = strtotime($startTime);
+                            $end = strtotime($endTime);
+
                             if ($start && $end && $start < $end) {
-                                $totalDurasi += ($end - $start) / 3600; // Konversi detik ke jam
+                                $totalDurasi += ($end - $start) / 3600; // jam
                                 $count++;
                             }
                         } catch (\Exception $e) {

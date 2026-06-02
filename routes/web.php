@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\ItemHistoryController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\BorrowingController as AdminBorrowingController;
+use App\Http\Controllers\Admin\AccountController;
 
 // ============================================
 // TAMBAHKAN IMPORT UNTUK API CONTROLLER (opsional)
@@ -239,6 +240,31 @@ Route::middleware('auth')
         [AdminBorrowingController::class, 'adminCancel']
     )->name('admin.borrowings.cancel');
 
+    /*
+    |--------------------------------------------------------------------------
+    | ACCOUNT MANAGEMENT
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/accounts/students',
+        [AccountController::class, 'students']
+    )->name('admin.accounts.students');
+
+    Route::delete(
+        '/accounts/students/{user}',
+        [AccountController::class, 'destroyStudent']
+    )->name('admin.accounts.students.destroy');
+
+    Route::get(
+        '/accounts/admins',
+        [AccountController::class, 'admins']
+    )->name('admin.accounts.admins');
+
+    Route::post(
+        '/accounts/admins',
+        [AccountController::class, 'storeAdmin']
+    )->name('admin.accounts.admins.store');
 });
 
 /*

@@ -150,10 +150,8 @@ Route::middleware('auth')
     |--------------------------------------------------------------------------
     */
 
-    Route::resource(
-        'rooms',
-        RoomController::class
-    );
+    Route::resource('rooms', RoomController::class)
+        ->except(['create', 'edit']);
 
     /*
     |--------------------------------------------------------------------------

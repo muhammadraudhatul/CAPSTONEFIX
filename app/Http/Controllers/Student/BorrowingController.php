@@ -36,7 +36,7 @@ class BorrowingController extends Controller
         return $dayMap[
             Carbon::parse($date)
                 ->format('l')
-        ];
+        ] ?? null;
     }
 
     private function authorizeBorrowing(
@@ -87,6 +87,13 @@ class BorrowingController extends Controller
         $day = $this->getDayName(
             $request->date
         );
+
+        // Hari Sabtu/Minggu
+        if (!$day) {
+            return response()->json([
+                'message' => 'Peminjaman hanya tersedia pada hari Senin–Jumat'
+            ]);
+        }
 
         $schedules = RoomSchedule::where(
                 'room_id',

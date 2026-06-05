@@ -23,7 +23,7 @@
 
 <div class="max-w-5xl mx-auto py-12 px-6">
 
-    <a
+    
     href="{{ route('student.dashboard') }}"
     class="inline-flex items-center gap-2
            text-indigo-600 font-semibold
@@ -115,8 +115,10 @@
                 Waktu
             </label>
 
+            <!-- PERUBAHAN: tambah x-model="time_slot" -->
             <select
                 name="time_slot"
+                x-model="time_slot"
                 required
                 class="w-full rounded-2xl border-gray-300
                        focus:border-indigo-500
@@ -362,7 +364,7 @@
         <div class="flex gap-4 mt-12">
 
             <!-- CANCEL -->
-            <a
+            
                 href="{{ route('student.dashboard') }}"
                 class="w-1/3 bg-gray-100 text-gray-700
                     py-4 rounded-2xl text-lg
@@ -406,6 +408,9 @@ function borrowingForm()
 
         schedules: [],
 
+        // PERUBAHAN: tambah time_slot ke state
+        time_slot: '',
+
         with_lecturer: 0,
 
         items: [
@@ -430,6 +435,10 @@ function borrowingForm()
 
         async loadSchedules()
         {
+            // PERUBAHAN: reset time_slot dan schedules setiap kali tanggal/ruangan berubah
+            this.time_slot = '';
+            this.schedules = [];
+
             if (!this.borrow_date || !this.room_id)
             {
                 return;

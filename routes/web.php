@@ -15,7 +15,7 @@ use App\Http\Controllers\Admin\ItemHistoryController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\BorrowingController as AdminBorrowingController;
 use App\Http\Controllers\Admin\AccountController;
-
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 // ============================================
 // TAMBAHKAN IMPORT UNTUK API CONTROLLER (opsional)
 // ============================================
@@ -138,11 +138,8 @@ Route::middleware('auth')
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/dashboard', function () {
-
-        return view('admin.dashboard');
-
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+        ->name('admin.dashboard');
 
     /*
     |--------------------------------------------------------------------------

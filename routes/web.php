@@ -260,6 +260,11 @@ Route::middleware('auth')
         '/accounts/admins',
         [AccountController::class, 'storeAdmin']
     )->name('admin.accounts.admins.store');
+
+    Route::delete(
+        'accounts/admins/{user}', 
+        [App\Http\Controllers\Admin\AccountController::class, 'destroyAdmin']
+    )->name('admin.accounts.admins.destroy');
 });
 
 /*

@@ -69,4 +69,21 @@ class AccountController extends Controller
             'Admin berhasil ditambahkan'
         );
     }
+
+    public function destroyAdmin(User $user)
+    {
+        // 1. Proteksi: Admin tidak bisa hapus diri sendiri
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        // 2. Proteksi: Admin Utama (nim === 'admin') tidak bisa dihapus
+        if ($user->nim === 'admin') {
+            return back()->with('error', 'Admin Utama tidak dapat dihapus.');
+        }
+
+        $user->delete();
+
+        return back()->with('success', 'Akun admin berhasil dihapus');
+    }
 }

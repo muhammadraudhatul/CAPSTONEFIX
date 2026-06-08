@@ -687,46 +687,37 @@ class BorrowingController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function submitReturn(
-        Request $request,
-        Borrowing $borrowing
-    ) {
-        $this->authorizeBorrowing(
-            $borrowing
-        );
+    public function submitReturn(Request $request, Borrowing $borrowing)
+    {
+        $this->authorizeBorrowing($borrowing);
 
-        foreach (
-            $borrowing->items as $borrowedItem
-        ) {
+        DB::transaction(function () use ($request, $borrowing) {
 
-            $returnedQty =
-                $request->returned_qty[
-                    $borrowedItem->id
-                ] ?? 0;
+            foreach ($borrowing->items as $borrowedItem) {
 
-            if (
-                $returnedQty >
-                $borrowedItem->qty
-            ) {
-                $returnedQty =
-                    $borrowedItem->qty;
+                $returnedQty = $request->returned_qty[$borrowedItem->id] ?? 0;
+
+                if ($returnedQty > $borrowedItem->qty) {
+                    $returnedQty = $borrowedItem->qty;
+                }
+
+                $borrowedItem->update([
+                    'returned_qty' => $returnedQty,
+                ]);
+
+                // Catat history pengembalian
+                ItemHistory::create([
+                    'item_id'     => $borrowedItem->item->id,
+                    'user_id'     => auth()->id(), // student yang return
+                    'action'      => 'return',
+                    'item_name'   => $borrowedItem->item->name,
+                    'description' => 'Mahasiswa mengajukan pengembalian item',
+                ]);
             }
 
-            $borrowedItem->update([
+            $borrowing->update(['status' => 'WAITING_RETURN']);
+        });
 
-                'returned_qty' =>
-                    $returnedQty,
-
-            ]);
-        }
-
-        $borrowing->update([
-
-            'status' => 'WAITING_RETURN',
-
-        ]);
-
-        return redirect()
-            ->route('student.dashboard');
+        return redirect()->route('student.dashboard');
     }
 }

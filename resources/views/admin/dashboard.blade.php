@@ -202,11 +202,15 @@
     /* ── Pie Legend ── */
     .pie-wrap {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 2rem;
-        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
     }
-    .pie-canvas-wrap { flex: 0 0 200px; position: relative; }
+    .pie-canvas-wrap {     width: 220px;
+        height: 220px;
+        position: relative;
+        margin: 0 auto;}
     .pie-legend { flex: 1; min-width: 140px; }
     .legend-item {
         display: flex;
@@ -403,10 +407,12 @@
                 <div class="pie-legend">
                     @php
                         $statusColors = [
-                            'returned'  => '#22c55e',
-                            'active'    => '#4f7cff',
-                            'pending'   => '#f59e0b',
-                            'cancelled' => '#ef4444',
+                            'completed'      => '#22c55e', // hijau
+                            'approved'       => '#4f7cff', // biru
+                            'waiting_return' => '#06b6d4', // cyan
+                            'pending'        => '#f59e0b', // kuning
+                            'rejected'       => '#ef4444', // merah
+                            'cancelled'      => '#dc2626', // merah tua
                         ];
                         $total = collect($statusBreakdown ?? [])->sum('count');
                     @endphp
@@ -518,7 +524,14 @@
         $chartStatusLabels = collect($statusBreakdown ?? [])->map(fn($r) => ucfirst($r->status))->values()->toArray();
         $chartStatusCounts = collect($statusBreakdown ?? [])->pluck('count')->values()->toArray();
         $chartStatusColors = collect($statusBreakdown ?? [])->map(function($r) {
-            return ['returned'=>'#22c55e','active'=>'#4f7cff','pending'=>'#f59e0b','cancelled'=>'#ef4444'][strtolower($r->status)] ?? '#6b7a99';
+            return [
+                'completed'      => '#22c55e',
+                'approved'       => '#4f7cff',
+                'waiting_return' => '#06b6d4',
+                'pending'        => '#f59e0b',
+                'rejected'       => '#ef4444',
+                'cancelled'      => '#dc2626',
+            ][strtolower($r->status)] ?? '#6b7a99';
         })->values()->toArray();
 
         $chartItemLabels    = collect($itemsByType ?? [])->pluck('type')->values()->toArray();

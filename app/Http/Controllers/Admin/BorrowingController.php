@@ -177,7 +177,7 @@ class BorrowingController extends Controller
                         $borrowedItem->item->id,
 
                     'user_id' =>
-                        auth()->id(),
+                        $borrowing->user_id, // ← user peminjam, bukan admin
 
                     'action' =>
                         'borrow',
@@ -305,7 +305,35 @@ class BorrowingController extends Controller
 
                 /*
                 |--------------------------------------------------------------------------
-                | ONLY IF USED / LOST
+                | HISTORY - ITEM RETURNED
+                |--------------------------------------------------------------------------
+                */
+
+                if ($borrowedItem->returned_qty > 0)
+                {
+                    ItemHistory::create([
+
+                        'item_id' =>
+                            $item->id,
+
+                        'user_id' =>
+                            $borrowing->user_id, // ← user peminjam
+
+                        'action' =>
+                            'return',
+
+                        'item_name' =>
+                            $item->name,
+
+                        'description' =>
+                            'Item berhasil dikembalikan',
+
+                    ]);
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | HISTORY - STOCK USED / LOST
                 |--------------------------------------------------------------------------
                 */
 
@@ -327,7 +355,7 @@ class BorrowingController extends Controller
                             $item->id,
 
                         'user_id' =>
-                            auth()->id(),
+                            $borrowing->user_id, // ← user peminjam
 
                         'action' =>
                             'stock_used',

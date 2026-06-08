@@ -23,14 +23,21 @@ class DashboardController extends Controller
         // Items in use (borrowing_items where the parent borrowing is active)
         $itemsInUse = DB::table('borrowing_items')
             ->join('borrowings', 'borrowings.id', '=', 'borrowing_items.borrowing_id')
-            ->where('borrowings.status', 'active')
+            ->whereIn('borrowings.status', [
+                'APPROVED',
+                'WAITING_RETURN'
+            ])
             ->sum('borrowing_items.qty');
 
         // Avg utilization: (total slots used / total slots available) * 100
         // Using room_schedules: available=1 means usable, count active borrowings per room
         $totalSlots = DB::table('room_schedules')->where('available', 1)->count();
-        $usedSlots  = DB::table('borrowings')
-            ->whereIn('status', ['active', 'returned'])
+        $usedSlots = DB::table('borrowings')
+            ->whereIn('status', [
+                'APPROVED',
+                'WAITING_RETURN',
+                'COMPLETED'
+            ])
             ->count();
         $avgUtilization = $totalSlots > 0 ? round(($usedSlots / $totalSlots) * 100, 1) : 0;
 
@@ -79,7 +86,7 @@ class DashboardController extends Controller
                 DB::raw("DATE_FORMAT(borrow_date, '%b') as month"),
                 DB::raw("DATE_FORMAT(borrow_date, '%Y-%m') as month_sort"),
                 DB::raw("COUNT(*) as total_borrowings"),
-                DB::raw("SUM(CASE WHEN status = 'returned' THEN 1 ELSE 0 END) as total_returned")
+                DB::raw("SUM(CASE WHEN status = 'COMPLETED' THEN 1 ELSE 0 END) as total_returned")
             )
             ->where('borrow_date', '>=', Carbon::now()->subMonths(6)->startOfMonth())
             ->groupBy('month', 'month_sort')
@@ -107,7 +114,10 @@ class DashboardController extends Controller
                         $q->select(DB::raw(1))
                             ->from('borrowings')
                             ->whereColumn('borrowings.id', 'bi.borrowing_id')
-                            ->where('borrowings.status', 'active');
+                            ->whereIn('borrowings.status', [
+                            'APPROVED',
+                            'WAITING_RETURN'
+                        ]);
                     });
             })
             ->whereNull('items.deleted_at')
@@ -134,7 +144,11 @@ class DashboardController extends Controller
             })
             ->leftJoin('borrowings as b', function ($join) {
                 $join->on('b.room_id', '=', 'rooms.id')
-                    ->whereIn('b.status', ['active', 'returned']);
+                    ->whereIn('b.status', [
+                        'APPROVED',
+                        'WAITING_RETURN',
+                        'COMPLETED'
+                    ]);
             })
             ->groupBy('rooms.id', 'rooms.name')
             ->orderBy('rooms.name')

@@ -22,6 +22,8 @@ class ItemObserver
 
             'item_name' => $item->name,
 
+            'old_stock'   => 0,
+
             'new_stock' => $item->stock,
 
             'description' =>
@@ -67,6 +69,8 @@ class ItemObserver
             'action' => 'delete',
 
             'item_name' => $item->name,
+
+            'new_stock'   => 0,
 
             'old_stock' => $item->stock,
 

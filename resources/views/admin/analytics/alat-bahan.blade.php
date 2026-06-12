@@ -46,16 +46,40 @@
         </div>
         <div class="card stat-box">
             <div class="label">Frekuensi Dipinjam</div>
-            <div class="stat-val">{{ $dataExists ? $frekuensi_pakai : '-' }}</div>
+            <div class="stat-val">{{ $dataExists ? number_format($frekuensi_pakai) : '-' }}</div>
         </div>
         <div class="card stat-box">
             <div class="label">Prediksi Habis</div>
-            <div class="stat-val">{{ $dataExists ? $prediksi_habis : '-' }}</div>
-            <div class="trend-text">{{ $dataExists ? $sisa_hari . ' hari tersisa' : '-' }}</div>
+            <div class="stat-val" style="font-size: 1.2rem;">
+                {{ $dataExists ? ($prediksi_habis != '-' && $prediksi_habis != 'Habis' && $prediksi_habis != 'Tidak terprediksi' ? \Carbon\Carbon::parse($prediksi_habis)->format('d M Y') : $prediksi_habis) : '-' }}
+            </div>
+            <div class="trend-text">
+                @if($dataExists && $sisa_hari > 0 && $sisa_hari < 999)
+                    {{ $sisa_hari }} hari tersisa
+                @elseif($dataExists && $sisa_hari >= 999)
+                    Stok mencukupi
+                @elseif($dataExists && $sisa_hari == 0)
+                    Stok habis
+                @else
+                    -
+                @endif
+            </div>
         </div>
         <div class="card stat-box">
             <div class="label">Status Stok</div>
-            <div class="stat-val" style="color: {{ ($status_stok ?? '') == 'Aman' ? '#22c55e' : '#f59e0b' }}">{{ $dataExists ? $status_stok : '-' }}</div>
+            <div class="stat-val" style="color: 
+                @if($dataExists)
+                    @if($status_stok == 'Aman') #22c55e
+                    @elseif($status_stok == 'Peringatan') #f59e0b
+                    @elseif($status_stok == 'Kritis') #ef4444
+                    @elseif($status_stok == 'Habis') #6b7a99
+                    @else #22c55e
+                    @endif
+                @else #22c55e
+                @endif
+            ">
+                {{ $dataExists ? $status_stok : '-' }}
+            </div>
         </div>
     </div>
 
@@ -123,7 +147,7 @@
                         <th style="padding: 1rem;">Status</th>
                     </tr>
                 </thead>
-                <tbody>
+                {{-- <tbody>
                     @foreach($all_tools as $item)
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 1rem; font-weight: 500;">{{ $item->name }}</td>
@@ -134,6 +158,47 @@
                             @php $isLow = $item->stock <= $item->minimum_stock; @endphp
                             <span style="color: {{ $isLow ? '#ef4444' : '#22c55e' }}; font-weight: 600;">
                                 {{ $isLow ? 'Perlu Tindakan' : 'Aman' }}
+                            </span>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody> --}}
+                <tbody>
+                    @foreach($all_tools as $item)
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 1rem; font-weight: 500;">{{ $item->name }}</td>
+                        <td style="padding: 1rem;">{{ $item->stock }}</td>
+                        <td style="padding: 1rem;">{{ $item->minimum_stock }}</td>
+                        <td style="padding: 1rem;">{{ number_format($item->avg_usage, 2) }}</td>
+                        <td style="padding: 1rem;">
+                            @if($item->prediction_date != '-')
+                                {{ $item->prediction_date }}
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">
+                                    ({{ $item->remaining_days > 0 ? $item->remaining_days . ' hari lagi' : ($item->remaining_days == 0 ? 'Habis' : '-') }})
+                                </div>
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td style="padding: 1rem;">
+                            @php 
+                                $isLow = $item->stock <= $item->minimum_stock;
+                                $isCritical = $item->remaining_days <= 7 && $item->remaining_days > 0;
+                                $isWarning = $item->remaining_days <= 14 && $item->remaining_days > 7;
+                            @endphp
+                            <span style="color: 
+                                @if($isLow || $isCritical) #ef4444
+                                @elseif($isWarning) #f59e0b
+                                @else #22c55e
+                                @endif; 
+                                font-weight: 600;">
+                                @if($isLow || $isCritical)
+                                    Perlu Tindakan
+                                @elseif($isWarning)
+                                    Peringatan
+                                @else
+                                    Aman
+                                @endif
                             </span>
                         </td>
                     </tr>
@@ -151,35 +216,80 @@
     Chart.defaults.color = '#e8edf5';
     Chart.defaults.font.family = "'Inter', sans-serif";
 
-    // Line Chart
+    // Line Chart untuk Tren Penggunaan (Quantity)
     new Chart(document.getElementById('lineChart'), {
         type: 'line',
         data: {
             labels: {!! json_encode($chartLabels) !!},
             datasets: [
                 { 
-                    label: 'Permintaan', 
+                    label: 'Jumlah Unit Dipinjam',  // ✅ Jelas bahwa ini quantity
                     data: {!! json_encode($chartPinjam) !!}, 
                     borderColor: '#4f7cff', 
                     backgroundColor: 'rgba(79,124,255,0.1)', 
-                    tension: 0.3, borderWidth: 3 
+                    tension: 0.3, 
+                    borderWidth: 3,
+                    fill: true
                 },
                 { 
-                    label: 'Pengembalian', 
+                    label: 'Jumlah Unit Dikembalikan',  // ✅ Jelas bahwa ini quantity
                     data: {!! json_encode($chartKembali) !!}, 
-                    borderColor: '#22c55e', // Warna hijau
+                    borderColor: '#22c55e',
                     backgroundColor: 'rgba(34,197,94,0.1)', 
-                    tension: 0.3, borderWidth: 3 
+                    tension: 0.3, 
+                    borderWidth: 3,
+                    fill: true
                 }
             ]
         },
         options: {
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } } },
+            responsive: true, 
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { 
+                    position: 'bottom', 
+                    labels: { 
+                        usePointStyle: true, 
+                        padding: 20,
+                        font: { size: 12 }
+                    } 
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            let value = context.raw;
+                            return `${label}: ${value} unit`;
+                        }
+                    }
+                }
+            },
             scales: { 
                 y: {
                     beginAtZero: true,
-                    ticks: { precision: 0 } // Memastikan angka di sumbu Y adalah bilangan bulat
+                    ticks: { 
+                        precision: 0,
+                        stepSize: 1,
+                        callback: function(value) {
+                            return value + ' unit';
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Jumlah Unit',
+                        color: '#e8edf5'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tanggal',
+                        color: '#e8edf5'
+                    },
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
                 }
             }
         }

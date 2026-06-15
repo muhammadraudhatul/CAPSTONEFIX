@@ -21,18 +21,15 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* ── Page backdrop: shows the dashboard behind ── */
         body {
             min-height: 100vh;
             background: radial-gradient(ellipse at 20% 50%, #2a3f8f 0%, #1a2a6e 40%, #0d1540 100%);
             display: flex;
             align-items: flex-start;
             justify-content: center;
-            /* Blur overlay effect */
             backdrop-filter: blur(0px);
         }
 
-        /* ── Overlay: full-screen dim + blur over the dashboard ── */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -47,7 +44,6 @@
             z-index: 50;
         }
 
-        /* ── Modal card ── */
         .modal-card {
             width: 100%;
             max-width: 660px;
@@ -60,7 +56,6 @@
             margin-bottom: 2rem;
         }
 
-        /* ── Scrollable form body ── */
         .modal-body {
             padding: 2.25rem 2.5rem 1.5rem;
             overflow-y: auto;
@@ -75,7 +70,6 @@
             letter-spacing: -0.01em;
         }
 
-        /* ── Fields ── */
         .field {
             margin-bottom: 1.35rem;
         }
@@ -96,7 +90,6 @@
             margin-top: 0.3rem;
         }
 
-        /* ── Inputs, selects, textareas ── */
         .field input[type="text"],
         .field input[type="number"],
         .field input[type="date"],
@@ -120,7 +113,6 @@
             -webkit-appearance: auto;
         }
 
-        /* Custom arrow for select */
         .field select,
         .item-row select {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='rgba(255,255,255,0.4)' d='M1 1l5 5 5-5'/%3E%3C/svg%3E") !important;
@@ -165,7 +157,6 @@
             cursor: pointer;
         }
 
-        /* ── Radio group ── */
         .radio-group {
             display: flex;
             gap: 1.5rem;
@@ -189,7 +180,6 @@
             cursor: pointer;
         }
 
-        /* ── Items section ── */
         .items-header {
             display: flex;
             justify-content: space-between;
@@ -216,6 +206,7 @@
 
         .btn-add:hover { color: #93c5fd; }
 
+        /* ── PERUBAHAN 1: grid item-row disesuaikan ── */
         .item-row {
             display: grid;
             grid-template-columns: 1fr 110px 34px;
@@ -237,7 +228,6 @@
 
         .btn-remove:hover { color: #f87171; }
 
-        /* ── Bottom action bar ── */
         .modal-actions {
             display: flex;
             gap: 0.65rem;
@@ -287,7 +277,6 @@
             color: rgba(255,255,255,0.85);
         }
 
-        /* ── Scrollbar ── */
         .modal-body::-webkit-scrollbar { width: 6px; }
         .modal-body::-webkit-scrollbar-track { background: transparent; }
         .modal-body::-webkit-scrollbar-thumb {
@@ -298,7 +287,91 @@
             background: rgba(255,255,255,0.22);
         }
 
-        /* ── Responsive ── */
+        /* ── PERUBAHAN 2: CSS combobox baru ── */
+        [x-cloak] { display: none !important; }
+
+        .combobox-wrap {
+            position: relative;
+        }
+
+        .combobox-input {
+            display: block;
+            width: 100%;
+            background: rgba(255,255,255,0.055) !important;
+            border: 1px solid rgba(255,255,255,0.09) !important;
+            border-radius: 0.7rem !important;
+            padding: 0.82rem 1.1rem !important;
+            color: #fff !important;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+            cursor: text;
+        }
+
+        .combobox-input:focus {
+            border-color: rgba(96,165,250,0.5) !important;
+            background: rgba(255,255,255,0.08) !important;
+            box-shadow: 0 0 0 3px rgba(96,165,250,0.08) !important;
+        }
+
+        .combobox-input::placeholder {
+            color: rgba(255,255,255,0.22) !important;
+        }
+
+        .combobox-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0; right: 0;
+            background: #1e2d5a;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 0.7rem;
+            max-height: 220px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+        }
+
+        .combobox-option {
+            padding: 0.65rem 1rem;
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.8);
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .combobox-option:hover,
+        .combobox-option.is-active {
+            background: rgba(96,165,250,0.15);
+            color: #fff;
+        }
+
+        .combobox-option .stock-badge {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.07);
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .combobox-empty {
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.3);
+            text-align: center;
+        }
+
+        .combobox-dropdown::-webkit-scrollbar { width: 5px; }
+        .combobox-dropdown::-webkit-scrollbar-track { background: transparent; }
+        .combobox-dropdown::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 3px;
+        }
+
         @media (max-width: 680px) {
             .modal-overlay { padding: 0; align-items: flex-end; }
             .modal-card { max-width: 100%; border-radius: 1.25rem 1.25rem 0 0; margin-bottom: 0; }
@@ -310,15 +383,10 @@
 
 <body>
 
-    {{-- ── The dashboard / page content sits here behind the overlay ── --}}
-
-    <!-- Modal overlay -->
     <div class="modal-overlay" x-data="borrowingForm()">
 
-        <!-- Modal card -->
         <div class="modal-card">
 
-            <!-- Scrollable body -->
             <div class="modal-body">
 
                 <p class="modal-title">Peminjaman Baru</p>
@@ -328,13 +396,11 @@
                 <form method="POST" action="{{ route('student.borrowings.store') }}" id="theForm">
                     @csrf
 
-                    <!-- Tanggal Peminjaman -->
                     <div class="field">
                         <label>Tanggal Peminjaman</label>
                         <input type="date" name="borrow_date" x-model="borrow_date" @change="loadSchedules" required>
                     </div>
 
-                    <!-- Ruangan -->
                     <div class="field">
                         <label>Ruangan</label>
                         <select name="room_id" x-model="room_id" @change="loadSchedules" required>
@@ -345,7 +411,6 @@
                         </select>
                     </div>
 
-                    <!-- Waktu -->
                     <div class="field">
                         <label>Waktu</label>
                         <select name="time_slot" x-model="time_slot" required>
@@ -361,20 +426,17 @@
                         </p>
                     </div>
 
-                    <!-- Keperluan -->
                     <div class="field">
                         <label>Keperluan</label>
                         <textarea name="purpose" rows="4" required placeholder="Jelaskan keperluan peminjaman"></textarea>
                     </div>
 
-                    <!-- Jumlah Orang -->
                     <div class="field">
                         <label>Jumlah Orang</label>
                         <input type="number" name="total_people" required min="1"
                                placeholder="Masukkan jumlah orang yang akan menggunakan">
                     </div>
 
-                    <!-- Dibersamai Dosen -->
                     <div class="field">
                         <label>Dibersamai Dosen?</label>
                         <div class="radio-group">
@@ -387,13 +449,12 @@
                         </div>
                     </div>
 
-                    <!-- Nama Dosen (conditional) -->
                     <div class="field" x-show="with_lecturer == 1" x-transition>
                         <label>Nama Dosen</label>
                         <input type="text" name="lecturer_name" placeholder="Masukkan nama dosen">
                     </div>
 
-                    <!-- Alat yang Dipinjam -->
+                    <!-- ── PERUBAHAN 3: item-row pakai combobox, bukan <select> ── -->
                     <div class="field">
                         <div class="items-header">
                             <span class="items-header-label">Alat yang Dipinjam</span>
@@ -401,15 +462,44 @@
                         </div>
 
                         <template x-for="(item, index) in items" :key="index">
-                            <div class="item-row">
-                                <select :name="'items['+index+'][item_id]'" @change="setStock(index, $event)">
-                                    <option value="">Pilih Alat</option>
-                                    @foreach($items as $item)
-                                        <option value="{{ $item->id }}" data-stock="{{ $item->stock }}">
-                                            {{ $item->name }} (stok: {{ $item->stock }})
-                                        </option>
-                                    @endforeach
-                                </select>
+                            <div class="item-row" x-data="combobox(index, items)">
+
+                                <!-- PERUBAHAN 3a: hidden input untuk submit -->
+                                <input type="hidden" :name="'items['+index+'][item_id]'" :value="items[index].item_id">
+
+                                <!-- PERUBAHAN 3b: searchable combobox -->
+                                <div class="combobox-wrap">
+                                    <input
+                                        type="text"
+                                        class="combobox-input"
+                                        placeholder="Cari alat..."
+                                        x-model="search"
+                                        @focus="open = true"
+                                        @input="open = true"
+                                        @keydown.escape="open = false"
+                                        @keydown.arrow-down.prevent="moveDown"
+                                        @keydown.arrow-up.prevent="moveUp"
+                                        @keydown.enter.prevent="selectHighlighted(index)"
+                                        @blur="handleBlur"
+                                        autocomplete="off"
+                                    >
+
+                                    <div class="combobox-dropdown" x-show="open" x-cloak>
+                                        <template x-if="filtered.length === 0">
+                                            <div class="combobox-empty">Alat tidak ditemukan</div>
+                                        </template>
+                                        <template x-for="(opt, i) in filtered" :key="opt.id">
+                                            <div
+                                                class="combobox-option"
+                                                :class="{ 'is-active': highlighted === i }"
+                                                @mousedown.prevent="selectOption(opt, index)"
+                                            >
+                                                <span x-text="opt.name"></span>
+                                                <span class="stock-badge">stok: <span x-text="opt.stock"></span></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
 
                                 <div>
                                     <input
@@ -433,16 +523,21 @@
                 </form>
             </div>
 
-            <!-- Action buttons -->
             <div class="modal-actions">
                 <button type="submit" form="theForm" class="btn-submit">Submit</button>
                 <a href="{{ route('student.dashboard') }}" class="btn-batal">Batal</a>
             </div>
 
-        </div><!-- /.modal-card -->
-    </div><!-- /.modal-overlay -->
+        </div>
+    </div>
+
+    <!-- ── PERUBAHAN 4: expose $items sebagai JSON untuk Alpine combobox ── -->
+    <script>
+        const ALL_ITEMS = @json($items->map(fn($i) => ['id' => $i->id, 'name' => $i->name, 'stock' => $i->stock]));
+    </script>
 
     <script>
+    // ── PERUBAHAN 5: borrowingForm() — items kini punya item_id, hapus setStock ──
     function borrowingForm() {
         return {
             borrow_date: '',
@@ -451,13 +546,12 @@
             time_slot: '',
             scheduleMessage: '',
             with_lecturer: 0,
-            items: [{ qty: '', max_stock: 0 }],
+            items: [{ item_id: '', qty: '', max_stock: 0 }],
 
-            addItem()             { this.items.push({ qty: '', max_stock: 0 }); },
-            removeItem(index)     { this.items.splice(index, 1); },
+            addItem()         { this.items.push({ item_id: '', qty: '', max_stock: 0 }); },
+            removeItem(index) { this.items.splice(index, 1); },
 
             async loadSchedules() {
-
                 this.time_slot = '';
                 this.schedules = [];
                 this.scheduleMessage = '';
@@ -478,11 +572,6 @@
                 this.schedules = data;
             },
 
-            setStock(index, event) {
-                const opt = event.target.options[event.target.selectedIndex];
-                this.items[index].max_stock = parseInt(opt.dataset.stock) || 0;
-            },
-
             validateQty(index) {
                 const qty = parseInt(this.items[index].qty);
                 const max = this.items[index].max_stock;
@@ -490,6 +579,52 @@
                     this.items[index].qty = max;
                     alert('Stok maksimal saat ini: ' + max);
                 }
+            }
+        }
+    }
+
+    // ── PERUBAHAN 5: fungsi combobox() baru ──
+    function combobox(index, items) {
+        return {
+            search: '',
+            open: false,
+            highlighted: 0,
+
+            get filtered() {
+                if (!this.search.trim()) return ALL_ITEMS;
+                const q = this.search.toLowerCase();
+                return ALL_ITEMS.filter(o => o.name.toLowerCase().includes(q));
+            },
+
+            selectOption(opt, index) {
+                items[index].item_id   = opt.id;
+                items[index].max_stock = opt.stock;
+                this.search      = opt.name;
+                this.open        = false;
+                this.highlighted = 0;
+            },
+
+            selectHighlighted(index) {
+                if (this.filtered[this.highlighted]) {
+                    this.selectOption(this.filtered[this.highlighted], index);
+                }
+            },
+
+            moveDown() {
+                this.highlighted = this.highlighted < this.filtered.length - 1
+                    ? this.highlighted + 1
+                    : 0;
+            },
+
+            moveUp() {
+                this.highlighted = this.highlighted > 0
+                    ? this.highlighted - 1
+                    : this.filtered.length - 1;
+            },
+
+            handleBlur() {
+                // delay agar mousedown pada option sempat terpanggil dulu
+                setTimeout(() => { this.open = false; }, 150);
             }
         }
     }

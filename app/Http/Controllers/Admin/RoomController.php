@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Models\RoomSchedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoomController extends Controller
 {
@@ -31,16 +32,12 @@ class RoomController extends Controller
 
     public function index(Request $request)
     {
-        $rooms = Room::with('schedules')->get();
-
         $weeks = [];
 
         $start = Carbon::now()->startOfWeek(Carbon::MONDAY);
 
         for ($i = 0; $i < 12; $i++) {
-
             $weekStart = $start->copy()->addWeeks($i);
-
             $weekEnd = $weekStart->copy()->addDays(6);
 
             $weeks[] = [
@@ -52,9 +49,20 @@ class RoomController extends Controller
             ];
         }
 
-        $selectedWeek =
-            $request->week ??
-            $weeks[0]['value'];
+        $selectedWeek = $request->week ?? $weeks[0]['value'];
+
+        $rooms = Room::query()
+            ->orderBy('name')
+            ->get();
+
+        $schedules = RoomSchedule::query()
+            ->where('week_start', $selectedWeek)
+            ->whereIn('room_id', $rooms->pluck('id'))
+            ->get();
+
+        $scheduleMap = $schedules->keyBy(function ($schedule) {
+            return $schedule->room_id . '|' . $schedule->day . '|' . $schedule->time_slot;
+        });
 
         return view('admin.rooms.index', [
             'rooms' => $rooms,
@@ -62,6 +70,7 @@ class RoomController extends Controller
             'timeSlots' => $this->timeSlots,
             'weeks' => $weeks,
             'selectedWeek' => $selectedWeek,
+            'scheduleMap' => $scheduleMap,
         ]);
     }
 
@@ -72,43 +81,47 @@ class RoomController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required',
             'capacity' => 'required|integer|min:1',
         ]);
 
-        $room = Room::create([
-            'name' => $request->name,
-            'capacity' => $request->capacity,
-        ]);
+        DB::transaction(function () use ($validated) {
+            $room = Room::create([
+                'name' => $validated['name'],
+                'capacity' => $validated['capacity'],
+            ]);
 
-        $start = Carbon::now()->startOfWeek(Carbon::MONDAY);
+            $start = Carbon::now()->startOfWeek(Carbon::MONDAY);
+            $now = now();
 
-        for ($week = 0; $week < 52; $week++) {
+            $rows = [];
 
-            $weekStart = $start
-                ->copy()
-                ->addWeeks($week);
+            for ($week = 0; $week < 12; $week++) {
+                $weekStart = $start->copy()->addWeeks($week);
+                $weekStartStr = $weekStart->format('Y-m-d');
 
-            $weekStartStr = $weekStart->format('Y-m-d');
-
-            foreach ($this->days as $day) {
-
-                foreach ($this->timeSlots as $slot) {
-
-                    RoomSchedule::create([
-                        'room_id' => $room->id,
-                        'week_start' => $weekStartStr,
-                        'day' => $day,
-                        'time_slot' => $slot,
-                        'available' => true,
-                    ]);
+                foreach ($this->days as $day) {
+                    foreach ($this->timeSlots as $slot) {
+                        $rows[] = [
+                            'room_id' => $room->id,
+                            'week_start' => $weekStartStr,
+                            'day' => $day,
+                            'time_slot' => $slot,
+                            'available' => true,
+                            'created_at' => $now,
+                            'updated_at' => $now,
+                        ];
+                    }
                 }
             }
-        }
+
+            RoomSchedule::insert($rows);
+        });
 
         return redirect()
-            ->route('rooms.index');
+            ->route('rooms.index')
+            ->with('success', 'Ruangan berhasil ditambahkan.');
     }
 
     public function edit(Room $room)

@@ -738,7 +738,7 @@
                                     required
                                     placeholder="Minimal 6 karakter"
                                 >
-                                <button type="button" class="toggle-pw" onclick="toggleKata Sandi('passwordInput', 'eyeIcon1')">
+                                <button type="button" class="toggle-pw" onclick="toggleKataSandi('passwordInput', 'eyeIcon1')">
                                     <i id="eyeIcon1" class="ti ti-eye"></i>
                                 </button>
                             </div>
@@ -756,7 +756,7 @@
                                     required
                                     placeholder="Masukkan ulang kata sandi"
                                 >
-                                <button type="button" class="toggle-pw" onclick="toggleKata Sandi('passwordConfirmInput', 'eyeIcon2')">
+                                <button type="button" class="toggle-pw" onclick="toggleKataSandi('passwordConfirmInput', 'eyeIcon2')">
                                     <i id="eyeIcon2" class="ti ti-eye"></i>
                                 </button>
                             </div>
@@ -785,7 +785,7 @@
     </div>
 
     <script>
-        function toggleKata Sandi(inputId, iconId) {
+        function toggleKataSandi(inputId, iconId) {
             const input = document.getElementById(inputId);
             const icon = document.getElementById(iconId);
             if (input.type === 'password') {

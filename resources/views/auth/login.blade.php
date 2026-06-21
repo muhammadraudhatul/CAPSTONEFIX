@@ -723,7 +723,7 @@
                                     required
                                     placeholder="Masukkan kata sandi"
                                 >
-                                <button type="button" class="toggle-pw" onclick="toggleKata Sandi()">
+                                <button type="button" class="toggle-pw" onclick="toggleKataSandi()">
                                     <i id="eyeIcon" class="ti ti-eye"></i>
                                 </button>
                             </div>
@@ -752,7 +752,7 @@
     </div>
 
     <script>
-        function toggleKata Sandi() {
+        function toggleKataSandi() {
             const input = document.getElementById('passwordInput');
             const icon = document.getElementById('eyeIcon');
             if (input.type === 'password') {

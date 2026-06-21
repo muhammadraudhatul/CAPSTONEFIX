@@ -1000,11 +1000,8 @@
                                 <td>{{ $slot }}</td>
                                 @foreach($days as $day)
                                 @php
-                                $schedule = $room->schedules
-                                    ->where('week_start', $selectedWeek)
-                                    ->where('day', $day)
-                                    ->where('time_slot', $slot)
-                                    ->first();
+                                $scheduleKey = $room->id . '|' . $day . '|' . $slot;
+                                $schedule = $scheduleMap->get($scheduleKey);
                                 @endphp
                                 <td>
                                     @if($schedule)

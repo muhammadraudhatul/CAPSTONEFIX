@@ -21,7 +21,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #0f1629;
+            background: #D6E8E6;
             min-height: 100vh;
         }
 
@@ -38,9 +38,9 @@
            SIDEBAR
         ══════════════════════════════ */
         .sidebar {
-            width: 260px;
+            width: 240px;
             flex-shrink: 0;
-            background: #141d3d;
+            background: #D6E8E6;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -54,47 +54,35 @@
         /* ── Logo ── */
         .sidebar-logo {
             display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            padding: 1.6rem 1.4rem 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            flex-direction: column;
+            gap: 0.15rem;
+            padding: 1.75rem 1.25rem 1.5rem;
         }
-
-        .logo-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 0.85rem;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            box-shadow: 0 6px 18px rgba(168,85,247,0.35);
-        }
-
-        .logo-icon i { font-size: 1.4rem; color: #fff; }
 
         .logo-text h1 {
-            font-size: 0.95rem;
+            font-size: 1.05rem;
             font-weight: 800;
-            color: #fff;
+            color: #1a4a44;
             letter-spacing: -0.01em;
             line-height: 1.2;
         }
 
         .logo-text p {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.4);
+            font-size: 0.65rem;
+            color: #5a8a84;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
             margin-top: 0.1rem;
         }
 
         /* ── Nav ── */
         .sidebar-nav {
-            padding: 1.25rem 0.85rem;
+            padding: 0.5rem 0.75rem;
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 0.15rem;
+            gap: 0.2rem;
         }
 
         /* base nav item */
@@ -103,8 +91,8 @@
             align-items: center;
             gap: 0.75rem;
             padding: 0.72rem 1rem;
-            border-radius: 0.75rem;
-            color: rgba(255,255,255,0.45);
+            border-radius: 999px;
+            color: #2E7D74;
             font-size: 0.9rem;
             font-weight: 500;
             text-decoration: none;
@@ -117,24 +105,39 @@
             font-family: 'Inter', sans-serif;
         }
 
-        .nav-item i { font-size: 1.15rem; flex-shrink: 0; }
-
-        .nav-item:hover {
-            background: rgba(255,255,255,0.06);
-            color: rgba(255,255,255,0.85);
+        .nav-item i {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            color: #2E7D74;
         }
 
-        /* active state — gradient pill */
+        .nav-item:hover {
+            background: rgba(46, 125, 116, 0.1);
+            color: #1a4a44;
+        }
+
+        .nav-item:hover i {
+            color: #1a4a44;
+        }
+
+        /* active state — solid teal pill */
         .nav-item.active {
-            background: linear-gradient(90deg, #8b5cf6, #ec4899);
-            color: #fff;
+            background: #2E7D74;
+            color: #ffffff;
             font-weight: 600;
-            box-shadow: 0 4px 16px rgba(139,92,246,0.3);
+        }
+
+        .nav-item.active i {
+            color: #ffffff;
         }
 
         .nav-item.active:hover {
-            background: linear-gradient(90deg, #7c3aed, #db2777);
-            color: #fff;
+            background: #256860;
+            color: #ffffff;
+        }
+
+        .nav-item.active:hover i {
+            color: #ffffff;
         }
 
         /* accordion toggle row */
@@ -149,14 +152,18 @@
         }
 
         .nav-toggle .chevron {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.3);
+            font-size: 0.75rem;
+            color: #5a8a84;
             transition: transform 0.2s;
+        }
+
+        .nav-item.active .chevron {
+            color: rgba(255,255,255,0.7);
         }
 
         /* submenu */
         .submenu {
-            padding-left: 1rem;
+            padding-left: 0.75rem;
             display: flex;
             flex-direction: column;
             gap: 0.1rem;
@@ -168,8 +175,8 @@
             align-items: center;
             gap: 0.7rem;
             padding: 0.6rem 1rem;
-            border-radius: 0.65rem;
-            color: rgba(255,255,255,0.38);
+            border-radius: 999px;
+            color: #2E7D74;
             font-size: 0.85rem;
             font-weight: 500;
             text-decoration: none;
@@ -177,23 +184,34 @@
             font-family: 'Inter', sans-serif;
         }
 
-        .nav-sub i { font-size: 1rem; flex-shrink: 0; }
+        .nav-sub i {
+            font-size: 1rem;
+            flex-shrink: 0;
+            color: #2E7D74;
+        }
 
         .nav-sub:hover {
-            background: rgba(255,255,255,0.05);
-            color: rgba(255,255,255,0.75);
+            background: rgba(46, 125, 116, 0.1);
+            color: #1a4a44;
+        }
+
+        .nav-sub:hover i {
+            color: #1a4a44;
         }
 
         .nav-sub.active {
-            color: rgba(255,255,255,0.9);
-            background: rgba(139,92,246,0.15);
+            background: #2E7D74;
+            color: #ffffff;
             font-weight: 600;
+        }
+
+        .nav-sub.active i {
+            color: #ffffff;
         }
 
         /* ── Sign Out ── */
         .sidebar-footer {
-            padding: 1rem 0.85rem 1.5rem;
-            border-top: 1px solid rgba(255,255,255,0.06);
+            padding: 1rem 0.75rem 1.75rem;
         }
 
         .btn-signout {
@@ -201,8 +219,8 @@
             align-items: center;
             gap: 0.75rem;
             padding: 0.72rem 1rem;
-            border-radius: 0.75rem;
-            color: rgba(255,255,255,0.4);
+            border-radius: 999px;
+            color: #2E7D74;
             font-size: 0.9rem;
             font-weight: 500;
             background: none;
@@ -214,11 +232,18 @@
             transition: background 0.18s, color 0.18s;
         }
 
-        .btn-signout i { font-size: 1.15rem; }
+        .btn-signout i {
+            font-size: 1.1rem;
+            color: #2E7D74;
+        }
 
         .btn-signout:hover {
-            background: rgba(239,68,68,0.1);
-            color: #f87171;
+            background: rgba(46, 125, 116, 0.1);
+            color: #1a4a44;
+        }
+
+        .btn-signout:hover i {
+            color: #1a4a44;
         }
 
         /* ══════════════════════════════
@@ -226,16 +251,185 @@
         ══════════════════════════════ */
         .main-content {
             flex: 1;
-            min-width: 0;        /* ← penting: cegah overflow melampaui flex container */
+            min-width: 0;
             min-height: 100vh;
-            background: #0f1629;
+            background: #f0f7f6;
             padding: 2.5rem;
-            color: #fff;
+            color: #1a4a44;
             overflow-x: hidden;
+        }
+
+        /* ══════════════════════════════
+        MOBILE SIDEBAR / OFF-CANVAS
+        ══════════════════════════════ */
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .mobile-topbar,
+        .sidebar-backdrop,
+        .sidebar-close {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .layout-wrapper {
+                display: block;
+                min-height: 100vh;
+                width: 100%;
+            }
+
+            .mobile-topbar {
+                position: sticky;
+                top: 0;
+                z-index: 45;
+                display: flex;
+                align-items: center;
+                gap: 0.9rem;
+                min-height: 68px;
+                padding: 0.85rem 1rem;
+                background: rgba(214, 232, 230, 0.92);
+                border-bottom: 1px solid rgba(46, 125, 116, 0.12);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                box-shadow: 0 8px 22px rgba(31, 42, 41, 0.06);
+            }
+
+            .mobile-menu-btn {
+                width: 44px;
+                height: 44px;
+                border-radius: 15px;
+                border: 1px solid rgba(46, 125, 116, 0.16);
+                background: rgba(255, 255, 255, 0.62);
+                color: #2E7D74;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 4px 14px rgba(31, 42, 41, 0.05);
+                transition: background 0.18s, transform 0.18s, color 0.18s;
+            }
+
+            .mobile-menu-btn:hover {
+                background: rgba(46, 125, 116, 0.10);
+                color: #1a4a44;
+                transform: translateY(-1px);
+            }
+
+            .mobile-menu-btn i {
+                font-size: 1.35rem;
+            }
+
+            .mobile-brand {
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+            }
+
+            .mobile-brand p {
+                font-size: 1rem;
+                font-weight: 900;
+                color: #1a4a44;
+                letter-spacing: -0.02em;
+                line-height: 1.1;
+                margin: 0;
+            }
+
+            .mobile-brand span {
+                font-size: 0.62rem;
+                color: #5a8a84;
+                font-weight: 800;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                margin-top: 0.15rem;
+            }
+
+            .sidebar-backdrop {
+                display: block;
+                position: fixed;
+                inset: 0;
+                z-index: 55;
+                background: rgba(31, 42, 41, 0.38);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                z-index: 60;
+                width: min(82vw, 300px);
+                height: 100vh;
+                min-height: 100vh;
+                transform: translateX(-105%);
+                transition: transform 0.26s cubic-bezier(.2,.8,.2,1);
+                box-shadow: 18px 0 44px rgba(31, 42, 41, 0.18);
+                border-right: 1px solid rgba(255, 255, 255, 0.65);
+            }
+
+            .sidebar.sidebar-open {
+                transform: translateX(0);
+            }
+
+            .sidebar-close {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                z-index: 2;
+                width: 38px;
+                height: 38px;
+                border-radius: 14px;
+                border: 1px solid rgba(46, 125, 116, 0.14);
+                background: rgba(255, 255, 255, 0.62);
+                color: #2E7D74;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: background 0.18s, color 0.18s, transform 0.18s;
+            }
+
+            .sidebar-close:hover {
+                background: rgba(201, 122, 98, 0.12);
+                color: #A85F49;
+                transform: translateY(-1px);
+            }
+
+            .sidebar-close i {
+                font-size: 1.25rem;
+            }
+
+            .sidebar-logo {
+                padding-right: 4rem;
+            }
+
+            .main-content {
+                width: 100%;
+                min-height: calc(100vh - 68px);
+                padding: 1.25rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: min(88vw, 300px);
+            }
+
+            .mobile-topbar {
+                min-height: 64px;
+                padding: 0.75rem 0.9rem;
+            }
+
+            .main-content {
+                padding: 1rem 0.75rem;
+            }
         }
     </style>
 
-    @stack('styles')  {{-- ← TAMBAHKAN INI --}}
+    @stack('styles')
 </head>
 
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -243,17 +437,51 @@
 <body>
 
     {{-- ══ LAYOUT WRAPPER ══ --}}
-    <div class="layout-wrapper">
+    <div
+        class="layout-wrapper"
+        x-data="{ sidebarOpen: false }"
+        x-effect="document.body.style.overflow = sidebarOpen ? 'hidden' : ''"
+    >
+        <!-- ══ MOBILE TOPBAR ══ -->
+        <header class="mobile-topbar">
+            <button
+                type="button"
+                class="mobile-menu-btn"
+                @click="sidebarOpen = true"
+                aria-label="Open sidebar"
+            >
+                <i class="ti ti-menu-2"></i>
+            </button>
+
+            <div class="mobile-brand">
+                <p>Laboratory</p>
+                <span>Management System</span>
+            </div>
+        </header>
+
+        <!-- ══ MOBILE BACKDROP ══ -->
+        <div
+            x-show="sidebarOpen"
+            x-cloak
+            x-transition.opacity
+            @click="sidebarOpen = false"
+            class="sidebar-backdrop"
+        ></div>
 
         <!-- ══ SIDEBAR ══ -->
-        <aside class="sidebar">
+        <aside class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
+            <button
+                type="button"
+                class="sidebar-close"
+                @click="sidebarOpen = false"
+                aria-label="Close sidebar"
+            >
+                <i class="ti ti-x"></i>
+            </button>
 
             <div>
                 <!-- Logo -->
                 <div class="sidebar-logo">
-                    <div class="logo-icon">
-                        <i class="ti ti-sparkles"></i>
-                    </div>
                     <div class="logo-text">
                         <h1>Laboratory</h1>
                         <p>Management System</p>
@@ -382,6 +610,6 @@
 
     </div>
 
-    @stack('scripts')  {{-- ← TAMBAHKAN INI --}}
+    @stack('scripts')
 </body>
 </html>

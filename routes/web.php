@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 // ============================================
 use App\Http\Controllers\Api\AnalyticsApiController;
 
+use App\Http\Controllers\AiAnalysisController;
+
 /*
 |--------------------------------------------------------------------------
 | PUBLIC
@@ -200,14 +202,21 @@ Route::middleware('auth')
     */
 
     Route::get(
-        '/analytics/items', 
-        [AnalyticsController::class, 'alatBahan']
+        '/analytics/items',
+        [AiAnalysisController::class, 'alatBahan']
     )->name('admin.analytics.items');
     
     Route::get(
         '/analytics/rooms', 
-        [AnalyticsController::class, 'ruangan']
+        [AiAnalysisController::class, 'ruangan']
     )->name('admin.analytics.rooms');
+
+
+    // Route::get('/admin/analytics/alat-bahan', [AiAnalysisController::class, 'alatBahan'])
+    //     ->name('admin.analytics.alat-bahan');
+
+    // Route::get('/analisis/ruangan', [AiAnalysisController::class, 'ruangan'])
+    //     ->name('analisis.ruangan');
 
     /*
     |--------------------------------------------------------------------------

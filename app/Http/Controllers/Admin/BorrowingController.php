@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+namespace App\Http\Controllers\Admin;
+use App\Jobs\RunAiAnalysisJob;
 use App\Http\Controllers\Controller;
 use App\Models\Borrowing;
 use App\Models\ItemHistory;
@@ -418,7 +419,7 @@ class BorrowingController extends Controller
 
             ]);
         });
-
+        RunAiAnalysisJob::dispatch('borrowing_completed');
         return back();
     }
 

@@ -4,286 +4,506 @@
 
 @push('styles')
 <style>
+    /* ── Flip7 muted theme: desain saja, logic Blade dan script tetap dipertahankan ── */
     .dash-wrapper {
-        --bg-base:       #0d1117;
-        --bg-card:       #161b27;
-        --bg-card-hover: #1c2333;
-        --border:        #252d3d;
-        --text-primary:  #e8edf5;
-        --text-muted:    #6b7a99;
-        --text-dim:      #4a5568;
-        --accent-blue:   #4f7cff;
-        --accent-purple: #8b5cf6;
-        --accent-green:  #22c55e;
-        --accent-orange: #f59e0b;
-        --accent-red:    #ef4444;
-        --accent-teal:   #2dd4bf;
-        --positive:      #22c55e;
-        --negative:      #ef4444;
+        --bg-base:            #EDF2F1;
+        --bg-card:            #FAFBFA;
+        --bg-card-hover:      #F7F3E8;
+        --border:             rgba(75,149,143,0.14);
+        --text-primary:       #1F2A29;
+        --text-muted:         #657675;
+        --text-dim:           #8A9997;
 
-        font-family: 'Inter', sans-serif;
+        --primary-teal:       #4B958F;
+        --primary-teal-light: #75B6B0;
+        --primary-teal-dark:  #356F6B;
+        --primary-bg:         #E7EFED;
+
+        --accent-gold:        #D7BD62;
+        --accent-gold-light:  #E9DCA7;
+        --accent-gold-dark:   #B69A3E;
+
+        --coral:              #C97A62;
+        --coral-light:        #DDA18E;
+        --coral-dark:         #A85F49;
+
+        --cream:              #F7F3E8;
+        --sky-blue:           #7FA8BF;
+        --success:            #4F8E72;
+        --error:              #B86155;
+
+        --accent-blue:   var(--sky-blue);
+        --accent-purple: var(--coral);
+        --accent-teal:   var(--primary-teal);
+        --accent-orange: var(--accent-gold-dark);
+        --accent-red:    var(--error);
+        --accent-green:  var(--success);
+        --positive:      var(--success);
+        --negative:      var(--error);
+
+        --shadow-sm:          0 2px 8px rgba(31,42,41,0.05);
+        --shadow-md:          0 10px 22px rgba(53,111,107,0.08);
+        --shadow-lg:          0 18px 38px rgba(31,42,41,0.10);
+        --shadow-card:        0 10px 28px rgba(53,111,107,0.07);
+        --shadow-soft:        0 14px 34px rgba(31,42,41,0.06);
+        --shadow-coral-glow:  0 12px 26px rgba(201,122,98,0.13);
+        --shadow-teal-glow:   0 12px 26px rgba(75,149,143,0.12);
+        --shadow-accent-glow: 0 12px 26px rgba(215,189,98,0.13);
+        --shadow-sky-glow:    0 12px 26px rgba(127,168,191,0.13);
+        --shadow-focus:       0 0 0 4px rgba(75,149,143,0.10);
+
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
         font-size: 14px;
         line-height: 1.6;
         color: var(--text-primary);
         padding: 2rem 1.75rem;
         box-sizing: border-box;
+        min-height: calc(100vh - 1px);
+        border-radius: 28px;
+        position: relative;
+        overflow: hidden;
+        background:
+            radial-gradient(circle at 8% 8%, rgba(215,189,98,0.09), transparent 25%),
+            radial-gradient(circle at 88% 12%, rgba(75,149,143,0.08), transparent 28%),
+            linear-gradient(135deg, #F3F6F5 0%, var(--bg-base) 52%, #EEF3F1 100%);
     }
 
-    .dash-wrapper *, .dash-wrapper *::before, .dash-wrapper *::after {
+    .dash-wrapper *,
+    .dash-wrapper *::before,
+    .dash-wrapper *::after {
         box-sizing: border-box;
     }
 
-    /* ─── HEADER ─── */
+    .dash-wrapper::before,
+    .dash-wrapper::after {
+        content: '';
+        position: absolute;
+        border-radius: 28px;
+        border: 1px solid rgba(53,111,107,0.05);
+        background: rgba(247,243,232,0.20);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .dash-wrapper::before {
+        width: 150px;
+        height: 210px;
+        right: -74px;
+        top: 110px;
+        transform: rotate(-8deg);
+    }
+
+    .dash-wrapper::after {
+        width: 108px;
+        height: 146px;
+        left: -52px;
+        bottom: 138px;
+        transform: rotate(10deg);
+    }
+
+    .page-header,
+    .stats-grid,
+    .ai-forecast-grid,
+    .charts-row,
+    .charts-row-wide,
+    .trend-card,
+    .dash-wrapper .card {
+        position: relative;
+        z-index: 1;
+    }
+
+    .page-header {
+        z-index: 60;
+    }
+
+    .stats-grid,
+    .ai-forecast-grid,
+    .charts-row,
+    .charts-row-wide,
+    .trend-card,
+    .dash-wrapper .card {
+        z-index: 1;
+    }
+
     .page-header {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 2rem;
+        margin-bottom: 1.75rem;
+        padding: 1.65rem 1.8rem;
+        border-radius: 30px;
+        background: linear-gradient(135deg, rgba(247,243,232,0.96), rgba(250,251,250,0.95));
+        border: 1px solid rgba(255,255,255,0.80);
+        box-shadow: var(--shadow-card);
         flex-wrap: wrap;
         gap: 1rem;
+        overflow: visible;
     }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 6px;
+        border-radius: 30px 0 0 30px;
+        background: linear-gradient(180deg, rgba(215,189,98,0.85), rgba(75,149,143,0.85), rgba(201,122,98,0.78));
+    }
+
+    .page-header::after {
+        content: 'ROOM ANALYTICS';
+        position: absolute;
+        right: 1.5rem;
+        bottom: 0.85rem;
+        color: rgba(53,111,107,0.05);
+        font-weight: 900;
+        font-size: clamp(1.7rem, 5vw, 4rem);
+        line-height: 1;
+        letter-spacing: 0.08em;
+        pointer-events: none;
+    }
+
+    .page-header > div,
+    .page-header > form,
+    .header-right {
+        position: relative;
+        z-index: 1;
+    }
+
     .page-title {
-        font-size: 1.75rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        line-height: 1.2;
+        font-size: clamp(1.9rem, 3vw, 2.55rem);
+        font-weight: 900;
+        color: var(--text-primary);
+        letter-spacing: -0.045em;
+        line-height: 1.05;
+        margin: 0 0 0.45rem;
+        padding: 0;
+        text-shadow: 2px 2px 0 rgba(215,189,98,0.20);
+    }
+
+    .page-subtitle {
+        color: #4C8A85;
+        font-size: 0.95rem;
         margin: 0;
         padding: 0;
-        color: var(--text-primary);
-    }
-    
-    .page-subtitle {
-        color: var(--text-muted);
-        font-size: 0.875rem;
-        margin: 0.2rem 0 0 0;
-        padding: 0;
+        font-weight: 700;
+        letter-spacing: 0.02em;
     }
 
     .header-right {
         display: flex;
         align-items: center;
+        justify-content: flex-end;
         gap: 0.75rem;
         flex-wrap: wrap;
+        margin-left: auto;
+        text-align: right;
     }
+
+    .header-right form {
+        margin-left: auto;
+    }
+
     .timestamp {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        background: var(--bg-card);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 0.4rem 0.85rem;
+        background: rgba(247,243,232,0.88);
+        border: 1px solid rgba(75,149,143,0.14);
+        border-radius: 999px;
+        padding: 0.55rem 1rem;
         font-size: 0.8rem;
-        color: var(--text-muted);
+        font-weight: 900;
+        color: var(--primary-teal-dark);
+        box-shadow: var(--shadow-sm);
         white-space: nowrap;
         align-self: center;
     }
-    /* ─── CUSTOM ROOM DROPDOWN ─── */
+
     .room-select-wrap {
         position: relative;
-        background: var(--bg-card);
-        border: 1px solid var(--border);
+        background: rgba(250,251,250,0.96);
+        border: 1px solid rgba(75,149,143,0.15);
         color: var(--text-primary);
-        padding: 0.4rem 0.85rem;
-        border-radius: 8px;
+        padding: 0.55rem 1rem;
+        border-radius: 999px;
         font-size: 0.85rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
         cursor: pointer;
         user-select: none;
-        transition: border-color 0.2s;
-        min-width: 180px;
+        box-shadow: var(--shadow-sm);
+        transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        min-width: 190px;
     }
+
     .room-select-wrap:hover {
-        border-color: #2f3a52;
+        border-color: rgba(75,149,143,0.28);
+        background: #FFFFFF;
+        box-shadow: var(--shadow-teal-glow);
     }
+
     .room-select-wrap.open {
-        border-color: var(--accent-blue);
+        border-color: rgba(75,149,143,0.38);
+        box-shadow: var(--shadow-focus);
     }
+
     .room-select-label {
         flex: 1;
         font-size: 0.85rem;
+        font-weight: 900;
         color: var(--text-primary);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
     .room-chevron {
         transition: transform 0.2s;
         flex-shrink: 0;
-        color: var(--text-muted);
+        color: var(--primary-teal);
     }
+
     .room-select-wrap.open .room-chevron {
         transform: rotate(180deg);
     }
+
     .room-dropdown-menu {
         display: none;
         position: absolute;
-        top: calc(100% + 6px);
+        top: calc(100% + 8px);
         right: 0;
         min-width: 100%;
-        background: #1c2333;
-        border: 1px solid #2f3a52;
-        border-radius: 10px;
-        padding: 0.35rem;
-        z-index: 9999;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+        background: #FAFBFA;
+        border: 1px solid rgba(75,149,143,0.15);
+        border-radius: 18px;
+        padding: 0.4rem;
+        z-index: 120;
+        box-shadow: var(--shadow-lg);
         max-height: 260px;
         overflow-y: auto;
     }
+
     .room-dropdown-menu.open {
         display: block;
     }
+
     .room-dropdown-item {
-        padding: 0.5rem 0.85rem;
-        border-radius: 7px;
+        padding: 0.55rem 0.9rem;
+        border-radius: 12px;
         font-size: 0.82rem;
+        font-weight: 800;
         color: var(--text-muted);
         transition: background 0.15s, color 0.15s;
         cursor: pointer;
         white-space: nowrap;
     }
+
     .room-dropdown-item:hover {
-        background: rgba(79,124,255,0.1);
-        color: var(--text-primary);
-    }
-    .room-dropdown-item.active {
-        background: rgba(79,124,255,0.18);
-        color: #7da8ff;
-        font-weight: 600;
+        background: rgba(231,239,237,0.88);
+        color: var(--primary-teal-dark);
     }
 
-    /* ─── STAT CARDS ─── */
+    .room-dropdown-item.active {
+        background: rgba(215,189,98,0.18);
+        color: #7F6B2A;
+        font-weight: 900;
+    }
+
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 1rem;
         margin-bottom: 1.5rem;
     }
+
     .stat-card {
-        background: var(--bg-card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 1.25rem 1.5rem 1.4rem;
+        background: linear-gradient(145deg, rgba(252,252,251,0.98) 0%, rgba(247,243,232,0.92) 100%);
+        border: 1px solid rgba(255,255,255,0.82);
+        border-left: 7px solid var(--primary-teal-light);
+        border-radius: 22px;
+        padding: 1.25rem 1.25rem 1.2rem;
         position: relative;
         overflow: hidden;
-        transition: border-color 0.2s, background 0.2s;
+        box-shadow: 0 6px 18px rgba(53,111,107,0.06);
+        transition: transform 0.24s cubic-bezier(.2,.8,.2,1), box-shadow 0.24s, border-color 0.24s, background 0.24s;
         animation: dashFadeUp 0.35s ease both;
     }
-    .stat-card:hover {
-        border-color: #2f3a52;
-        background: var(--bg-card-hover);
-    }
+
     .stat-card::before {
         content: '';
         position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 2px;
-        border-radius: 16px 16px 0 0;
+        width: 78px;
+        height: 78px;
+        right: -30px;
+        top: -30px;
+        border-radius: 999px;
+        background: rgba(75,149,143,0.07);
+        pointer-events: none;
     }
-    .stat-card.blue::before   { background: var(--accent-blue); }
-    .stat-card.purple::before { background: var(--accent-purple); }
-    .stat-card.teal::before   { background: var(--accent-teal); }
-    .stat-card.orange::before { background: var(--accent-orange); }
 
-    .stat-card:nth-child(1) { animation-delay: 0.04s; }
-    .stat-card:nth-child(2) { animation-delay: 0.08s; }
-    .stat-card:nth-child(3) { animation-delay: 0.12s; }
-    .stat-card:nth-child(4) { animation-delay: 0.16s; }
+    .stat-card::after {
+        content: '';
+        position: absolute;
+        left: 1.25rem;
+        bottom: 0;
+        width: 44px;
+        height: 4px;
+        border-radius: 999px 999px 0 0;
+        background: rgba(215,189,98,0.85);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(75,149,143,0.16);
+        background: linear-gradient(145deg, #FFFFFF 0%, rgba(247,243,232,0.94) 100%);
+        box-shadow: var(--shadow-md);
+    }
+
+    .stat-card.blue   { border-left-color: var(--sky-blue); }
+    .stat-card.purple { border-left-color: var(--coral); }
+    .stat-card.teal   { border-left-color: var(--primary-teal); }
+    .stat-card.orange { border-left-color: var(--accent-gold); }
+    .stat-card.red    { border-left-color: var(--error); }
+    .stat-card.green  { border-left-color: var(--success); }
+
+    .stat-card.blue::before   { background: rgba(127,168,191,0.10); }
+    .stat-card.purple::before { background: rgba(201,122,98,0.10); }
+    .stat-card.teal::before   { background: rgba(75,149,143,0.08); }
+    .stat-card.orange::before { background: rgba(215,189,98,0.14); }
+    .stat-card.red::before    { background: rgba(184,97,85,0.10); }
+    .stat-card.green::before  { background: rgba(79,142,114,0.10); }
+
+    .stat-card.blue:hover   { box-shadow: var(--shadow-sky-glow); }
+    .stat-card.purple:hover { box-shadow: var(--shadow-coral-glow); }
+    .stat-card.teal:hover   { box-shadow: var(--shadow-teal-glow); }
+    .stat-card.orange:hover { box-shadow: var(--shadow-accent-glow); }
+    .stat-card.red:hover    { box-shadow: 0 12px 26px rgba(184,97,85,0.13); }
+    .stat-card.green:hover  { box-shadow: 0 12px 26px rgba(79,142,114,0.13); }
+
+    .stat-card.red {
+        animation: dashFadeUp 0.35s ease both, alertGlow 2.4s ease-in-out infinite;
+    }
 
     .stat-top {
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin: 0 0 0.75rem 0;
+        position: relative;
+        z-index: 1;
     }
+
     .stat-label-tag {
         font-size: 0.7rem;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-weight: 700;
+        letter-spacing: 0.10em;
+        font-weight: 900;
     }
-    .stat-label-tag.blue   { color: var(--accent-blue); }
-    .stat-label-tag.purple { color: var(--accent-purple); }
-    .stat-label-tag.teal   { color: var(--accent-teal); }
-    .stat-label-tag.orange { color: var(--accent-orange); }
+
+    .stat-label-tag.blue   { color: #54768B; }
+    .stat-label-tag.purple { color: var(--coral-dark); }
+    .stat-label-tag.teal   { color: var(--primary-teal-dark); }
+    .stat-label-tag.orange { color: #7F6B2A; }
+    .stat-label-tag.red    { color: var(--error); }
+    .stat-label-tag.green  { color: #3C7359; }
 
     .stat-icon {
         width: 42px;
         height: 42px;
-        border-radius: 12px;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.1rem;
+        font-size: 0.9rem;
+        font-weight: 900;
         flex-shrink: 0;
+        border: 1px solid rgba(255,255,255,0.62);
+        box-shadow: var(--shadow-sm);
     }
-    .stat-icon.blue   { background: rgba(79,124,255,0.18);  color: var(--accent-blue); }
-    .stat-icon.purple { background: rgba(139,92,246,0.18);  color: var(--accent-purple); }
-    .stat-icon.teal   { background: rgba(45,212,191,0.18);  color: var(--accent-teal); }
-    .stat-icon.orange { background: rgba(245,158,11,0.18);  color: var(--accent-orange); }
+
+    .stat-icon.blue   { background: rgba(127,168,191,0.12);  color: #54768B; }
+    .stat-icon.purple { background: rgba(201,122,98,0.12);  color: var(--coral-dark); }
+    .stat-icon.teal   { background: rgba(75,149,143,0.12);  color: var(--primary-teal-dark); }
+    .stat-icon.orange { background: rgba(215,189,98,0.18);  color: #7F6B2A; }
+    .stat-icon.red    { background: rgba(184,97,85,0.12);   color: var(--error); }
+    .stat-icon.green  { background: rgba(79,142,114,0.12);  color: #3C7359; }
 
     .stat-value {
+        position: relative;
+        z-index: 1;
         font-size: 1.75rem;
-        font-weight: 700;
+        font-weight: 900;
         color: var(--text-primary);
-        letter-spacing: -0.02em;
+        letter-spacing: -0.04em;
         line-height: 1.2;
         margin: 0 0 0.3rem 0;
         display: block;
     }
+
     .stat-value small {
         font-size: 0.9rem;
-        font-weight: 600;
+        font-weight: 700;
         color: var(--text-muted);
         margin-left: 0.1rem;
+        letter-spacing: -0.02em;
     }
+
     .stat-sub {
-        font-size: 0.8rem;
-        color: var(--text-muted);
-        font-weight: 400;
+        position: relative;
+        z-index: 1;
+        font-size: 0.78rem;
+        color: var(--text-soft);
+        font-weight: 700;
         margin: 0;
         display: block;
     }
 
-    /* ─── CARDS ─── */
     .dash-wrapper .card {
-        background: var(--bg-card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
+        background: linear-gradient(180deg, rgba(250,251,250,0.98), rgba(244,241,234,0.88));
+        border: 1px solid rgba(255,255,255,0.82);
+        border-left: 7px solid var(--primary-teal);
+        border-radius: 26px;
         padding: 1.5rem;
-        transition: border-color 0.2s, background 0.2s;
+        box-shadow: var(--shadow-soft);
+        overflow: hidden;
+        transition: transform 0.24s cubic-bezier(.2,.8,.2,1), box-shadow 0.24s, border-color 0.24s, background 0.24s;
         animation: dashFadeUp 0.35s ease both;
     }
+
     .dash-wrapper .card:hover {
-        border-color: #2f3a52;
-        background: var(--bg-card-hover);
+        transform: translateY(-2px);
+        border-color: rgba(75,149,143,0.12);
+        background: linear-gradient(180deg, #FFFFFF, rgba(244,241,234,0.90));
+        box-shadow: var(--shadow-hover);
     }
+
     .card-title {
         font-size: 1rem;
-        font-weight: 700;
+        font-weight: 900;
         color: var(--text-primary);
-        margin: 0 0 0.2rem 0;
+        margin: 0 0 0.25rem 0;
         padding: 0;
         letter-spacing: -0.01em;
     }
+
     .card-subtitle {
         font-size: 0.72rem;
         text-transform: uppercase;
-        letter-spacing: 0.07em;
+        letter-spacing: 0.09em;
         color: var(--text-muted);
         margin: 0 0 1.25rem 0;
+        padding-bottom: 0.85rem;
+        border-bottom: 2px dashed rgba(75,149,143,0.14);
+        font-weight: 900;
     }
 
-    /* ─── CHART CONTAINERS ─── */
     .chart-wrap              { position: relative; width: 100%; }
     .chart-wrap canvas       { display: block; width: 100% !important; }
     .chart-container         { height: 280px; width: 100%; position: relative; }
     .chart-container-sm      { height: 240px; width: 100%; position: relative; }
     .chart-container-xs      { height: 190px; width: 100%; position: relative; }
 
-    /* ─── TREND CARD ─── */
     .trend-card { margin-bottom: 1.5rem; }
     .trend-card-header {
         display: flex;
@@ -292,33 +512,35 @@
         margin-bottom: 0.25rem;
     }
 
-    /* ─── CHART LEGEND ─── */
     .chart-legend {
         display: flex;
         gap: 1.25rem;
         flex-wrap: wrap;
         margin-top: 0.75rem;
     }
+
     .legend-item {
         display: flex;
         align-items: center;
         gap: 0.4rem;
         font-size: 0.72rem;
         color: var(--text-muted);
-    }
-    .legend-line {
-        width: 20px;
-        height: 2px;
-        border-radius: 2px;
+        font-weight: 800;
     }
 
-    /* ─── BOTTOM GRID ─── */
+    .legend-line {
+        width: 20px;
+        height: 3px;
+        border-radius: 999px;
+    }
+
     .charts-row-wide {
         display: grid;
         grid-template-columns: 5fr 7fr;
         gap: 1.5rem;
         margin-bottom: 1.5rem;
     }
+
     .charts-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -326,130 +548,183 @@
         margin-bottom: 1.5rem;
     }
 
-    /* ─── DONUT LEGEND ─── */
+    .ai-forecast-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
     .donut-legend {
         margin-top: 1rem;
         display: flex;
         flex-direction: column;
         gap: 0.55rem;
     }
+
     .donut-legend-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
         font-size: 0.78rem;
     }
+
     .donut-legend-left {
         display: flex;
         align-items: center;
         gap: 0.6rem;
         color: var(--text-primary);
+        font-weight: 900;
         min-width: 120px;
     }
+
     .donut-dot {
-        width: 10px; height: 10px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         flex-shrink: 0;
     }
+
     .donut-bar-wrap {
         flex: 1;
         margin: 0 0.75rem;
-        height: 3px;
-        background: var(--border);
-        border-radius: 2px;
+        height: 5px;
+        background: rgba(75,149,143,0.12);
+        border-radius: 999px;
         overflow: hidden;
     }
-    .donut-bar-fill { height: 100%; border-radius: 2px; }
+
+    .donut-bar-fill {
+        height: 100%;
+        border-radius: 999px;
+    }
+
     .donut-pct {
         font-size: 0.78rem;
-        font-weight: 700;
+        font-weight: 900;
         color: var(--text-muted);
         min-width: 38px;
         text-align: right;
     }
 
-    /* ─── TIME SLOT LEGEND ─── */
     .ts-legend {
         display: flex;
         gap: 1.25rem;
         flex-wrap: wrap;
         margin-bottom: 0.75rem;
     }
+
     .ts-legend-item {
         display: flex;
         align-items: center;
         gap: 0.4rem;
         font-size: 0.72rem;
         color: var(--text-muted);
+        font-weight: 800;
     }
+
     .ts-legend-dot {
-        width: 10px; height: 10px;
-        border-radius: 2px;
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
         flex-shrink: 0;
     }
 
-    /* ─── TABLE ─── */
-    .table-wrap { overflow-x: auto; border-radius: 12px; }
+    .table-wrap {
+        overflow-x: auto;
+        border-radius: 18px;
+    }
+
     .dash-wrapper table {
         width: 100%;
         border-collapse: collapse;
         font-size: 0.865rem;
     }
+
     .dash-wrapper thead th {
         text-align: left;
-        font-size: 0.78rem;
-        font-weight: 600;
+        font-size: 0.72rem;
+        font-weight: 900;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: var(--text-muted);
-        padding: 0.65rem 1rem;
-        border-bottom: 1px solid var(--border);
-        background: transparent;
+        letter-spacing: 0.10em;
+        color: #4A8C86;
+        padding: 0.75rem 1rem;
+        border-bottom: 2px solid rgba(75,149,143,0.10);
+        background: rgba(231,239,237,0.88);
+        white-space: nowrap;
     }
+
     .dash-wrapper tbody tr {
-        border-bottom: 1px solid rgba(37,45,61,0.6);
-        transition: background 0.15s;
+        border-bottom: 1px solid rgba(75,149,143,0.08);
+        transition: background 0.18s ease;
     }
+
     .dash-wrapper tbody tr:last-child { border-bottom: none; }
-    .dash-wrapper tbody tr:hover { background: rgba(255,255,255,0.025); }
+    .dash-wrapper tbody tr:hover { background: rgba(247,243,232,0.58); }
+
     .dash-wrapper tbody td {
-        padding: 0.8rem 1rem;
+        padding: 0.85rem 1rem;
         color: var(--text-primary);
         vertical-align: middle;
         border: none;
         background: transparent;
+        font-weight: 700;
     }
-    .dash-wrapper tbody td.muted { color: var(--text-muted); }
-    .room-name { font-weight: 700; }
 
-    /* ─── STATUS BADGE ─── */
+    .dash-wrapper tbody td.muted {
+        color: var(--text-muted);
+    }
+
+    .room-name {
+        font-weight: 900;
+        color: var(--primary-teal-dark);
+    }
+
     .dash-wrapper .badge {
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 0.25rem 0.65rem;
+        font-size: 0.72rem;
+        font-weight: 900;
+        padding: 0.25rem 0.7rem;
         border-radius: 999px;
         line-height: 1.4;
         white-space: nowrap;
+        border: 1px solid rgba(255,255,255,0.60);
+        box-shadow: var(--shadow-sm);
     }
-    .badge-approved        { background: rgba(79,124,255,0.15);  color: #7da8ff; }
-    .badge-completed,
-    .badge-returned        { background: rgba(34,197,94,0.15);   color: #4ade80; }
-    .badge-waiting_return  { background: rgba(6,182,212,0.15);   color: #22d3ee; }
-    .badge-pending         { background: rgba(245,158,11,0.15);  color: #fbbf24; }
-    .badge-rejected,
-    .badge-cancelled       { background: rgba(239,68,68,0.15);   color: #f87171; }
 
-    /* ─── EMPTY STATE ─── */
+    .badge-approved        { background: rgba(127,168,191,0.14); color: #54768B; }
+    .badge-completed,
+    .badge-returned        { background: rgba(79,142,114,0.14); color: #3C7359; }
+    .badge-waiting_return  { background: rgba(75,149,143,0.14); color: var(--primary-teal-dark); }
+    .badge-pending         { background: rgba(215,189,98,0.20); color: #7F6B2A; }
+    .badge-rejected,
+    .badge-cancelled       { background: rgba(184,97,85,0.13); color: var(--error); }
+    .badge-ai-used         { background: rgba(127,168,191,0.14); color: #54768B; }
+    .badge-ai-free         { background: rgba(31,42,41,0.06); color: var(--text-soft); }
+    .badge-anomaly         { background: rgba(201,122,98,0.16); color: var(--coral-dark); animation: boomPulse 2s infinite; }
+
     .empty-state {
         text-align: center;
         padding: 3rem 1rem;
-        color: var(--text-muted);
+        color: var(--text-dim);
+        background: rgba(247,243,232,0.34);
+        border-radius: 20px;
     }
-    .empty-state svg { margin-bottom: 0.75rem; opacity: 0.4; }
-    .empty-state p { font-size: 0.85rem; }
+
+    .empty-state svg {
+        margin-bottom: 0.75rem;
+        opacity: 0.62;
+    }
+
+    .empty-state p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        font-weight: 800;
+        margin: 0;
+    }
+
     .empty-row td {
         text-align: center;
         color: var(--text-muted);
@@ -457,21 +732,37 @@
         font-size: 0.85rem;
     }
 
-    /* ─── ANIMATE IN ─── */
     @keyframes dashFadeUp {
         from { opacity: 0; transform: translateY(12px); }
         to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ─── RESPONSIVE ─── */
+    @keyframes boomPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(201,122,98,0.30); }
+        50%      { box-shadow: 0 0 0 6px rgba(201,122,98,0.10); }
+    }
+
+    @keyframes alertGlow {
+        0%, 100% { box-shadow: 0 6px 18px rgba(53,111,107,0.06); }
+        50%      { box-shadow: 0 12px 26px rgba(184,97,85,0.13); }
+    }
+
     @media (max-width: 1100px) {
         .stats-grid        { grid-template-columns: repeat(2, 1fr); }
+        .ai-forecast-grid  { grid-template-columns: repeat(2, 1fr); }
         .charts-row-wide   { grid-template-columns: 1fr; }
         .charts-row        { grid-template-columns: 1fr; }
     }
+
     @media (max-width: 640px) {
-        .stats-grid  { grid-template-columns: 1fr; }
-        .page-title  { font-size: 1.3rem; }
+        .dash-wrapper      { padding: 1.25rem 1rem; border-radius: 22px; }
+        .stats-grid        { grid-template-columns: 1fr; }
+        .ai-forecast-grid  { grid-template-columns: 1fr; }
+        .page-header       { padding: 1.35rem 1.25rem; border-radius: 24px; }
+        .page-title        { font-size: 1.65rem; }
+        .header-right      { width: 100%; }
+        .timestamp,
+        .room-select-wrap  { width: 100%; }
     }
 </style>
 @endpush
@@ -479,72 +770,26 @@
 @section('content')
 
 @php
-    // ── Warna untuk donut chart (per ruangan) ──
-    $donutColors = ['#2dd4bf','#8b5cf6','#22c55e','#f59e0b','#ef4444','#4f7cff','#f472b6','#fb923c'];
+    $donutColors = ['#2BA8A2','#EF6C4A','#FFD23F','#5DADE2','#27AE60','#3CC4BD','#FF8A6A','#E6B800'];
 
-    // ── Distribusi pemakaian per ruangan (30 hari terakhir) ──
-    $roomUsage = \App\Models\Borrowing::where('borrow_date', '>=', now()->subDays(30))
-        ->selectRaw('room_id, COUNT(*) as total')
-        ->groupBy('room_id')
-        ->with('room')
-        ->get()
-        ->map(fn($b) => [
-            'name'  => $b->room->name ?? 'Tidak diketahui',
-            'total' => $b->total,
-        ])
-        ->sortByDesc('total')
-        ->values();
+    $aiStatus = strtolower($aiRoomSummary->predicted_occupancy_status ?? 'rendah');
+    $aiStatusColor = $aiStatus === 'tinggi'
+        ? '#E74C3C'
+        : ($aiStatus === 'sedang' ? '#E6B800' : '#27AE60');
 
-    $totalRoomUsage = $roomUsage->sum('total');
-
-    // ── Kepadatan per hari (30 hari terakhir, sesuai room jika dipilih) ──
-    $dayQuery = \App\Models\Borrowing::where('borrow_date', '>=', now()->subDays(30))
-        ->whereNotNull('day');
-
-    if (isset($selected_room) && $selected_room) {
-        $dayQuery->where('room_id', $selected_room->id);
-    }
-
-    $dayRaw = $dayQuery->selectRaw('day, COUNT(*) as total')
-        ->groupBy('day')
-        ->get()
-        ->keyBy('day');
-
-    $dayOrder  = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
-    $dayLabels = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
-    $dayTotals = array_map(fn($d) => $dayRaw->get($d)?->total ?? 0, $dayOrder);
-
-    // ── Riwayat peminjaman terbaru ──
-    $recentQuery = \App\Models\Borrowing::with(['room','user'])
-        ->orderBy('created_at', 'desc')
-        ->limit(5);
-
-    if (isset($selected_room) && $selected_room) {
-        $recentQuery->where('room_id', $selected_room->id);
-    }
-
-    $recentBorrowings = $recentQuery->get();
-
-    // ── Status badge helper ──
-    $statusMap = [
-        'approved'       => ['label' => 'approved',      'icon' => '◷', 'class' => 'badge-approved'],
-        'completed'      => ['label' => 'completed',         'icon' => '✓', 'class' => 'badge-completed'],
-        'returned'       => ['label' => 'returned',    'icon' => '✓', 'class' => 'badge-returned'],
-        'waiting_return' => ['label' => 'waiting_return','icon' => '⏳','class' => 'badge-waiting_return'],
-        'pending'        => ['label' => 'Pending',         'icon' => '⏳', 'class' => 'badge-pending'],
-        'rejected'       => ['label' => 'rejected',         'icon' => '✕', 'class' => 'badge-rejected'],
-        'cancelled'      => ['label' => 'cancelled',      'icon' => '✕', 'class' => 'badge-cancelled'],
-    ];
+    $aiUpdateText = $lastAiRun
+        ? (($lastAiRun->finished_at ?? $lastAiRun->created_at)->format('d M Y, H:i'))
+        : 'AI belum pernah dijalankan';
 @endphp
 
 <div class="dash-wrapper">
 
-    {{-- ─── HEADER ─── --}}
     <div class="page-header">
         <div>
-            <h1 class="page-title">Analisis Ruangan</span></h1>
-            <p class="page-subtitle">Monitoring tingkat penggunaan dan kepadatan ruangan</p>
+            <h1 class="page-title">🏢 Analisis Ruangan</h1>
+            <p class="page-subtitle">Monitoring tingkat penggunaan, forecasting okupansi, dan anomali ruangan</p>
         </div>
+
         <div class="header-right">
             <div class="timestamp">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -552,6 +797,7 @@
                 </svg>
                 {{ now()->isoFormat('D MMM YYYY, HH:mm') }}
             </div>
+
             <form method="GET" id="roomForm">
                 <input type="hidden" name="room_id" id="roomIdInput" value="{{ request('room_id') }}">
                 <div class="room-select-wrap" id="roomDropdown">
@@ -559,19 +805,21 @@
                         <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
                         <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
                     </svg>
+
                     <span class="room-select-label" id="roomDropdownLabel">
                         {{ $selected_room ? $selected_room->name : '-- Pilih Ruangan --' }}
                     </span>
+
                     <svg class="room-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="6 9 12 15 18 9"/>
                     </svg>
 
                     <div class="room-dropdown-menu" id="roomDropdownMenu">
-                        <div class="room-dropdown-item {{ !request('room_id') ? 'active' : '' }}"
-                             data-value="">-- Pilih Ruangan --</div>
+                        <div class="room-dropdown-item {{ !request('room_id') ? 'active' : '' }}" data-value="">-- Pilih Ruangan --</div>
                         @foreach($all_rooms as $room)
-                            <div class="room-dropdown-item {{ request('room_id') == $room->id ? 'active' : '' }}"
-                                 data-value="{{ $room->id }}">{{ $room->name }}</div>
+                            <div class="room-dropdown-item {{ request('room_id') == $room->id ? 'active' : '' }}" data-value="{{ $room->id }}">
+                                {{ $room->name }}
+                            </div>
                         @endforeach
                     </div>
                 </div>
@@ -579,7 +827,6 @@
         </div>
     </div>
 
-    {{-- ─── STAT CARDS ─── --}}
     <div class="stats-grid">
 
         <div class="stat-card blue">
@@ -593,9 +840,7 @@
                 </div>
             </div>
             <span class="stat-value">{{ number_format($total_peminjaman) }}</span>
-            <span class="stat-sub">
-                {{ $selected_room ? 'Sepanjang waktu untuk ruangan ini' : 'Pilih ruangan untuk detail' }}
-            </span>
+            <span class="stat-sub">{{ $selected_room ? 'Sepanjang waktu untuk ruangan ini' : 'Pilih ruangan untuk detail' }}</span>
         </div>
 
         <div class="stat-card purple">
@@ -640,18 +885,153 @@
             <span class="stat-value">
                 {{ $rata_rata_durasi > 0 ? $rata_rata_durasi : '-' }}<small>{{ $rata_rata_durasi > 0 ? ' Jam' : '' }}</small>
             </span>
-            <span class="stat-sub">
-                {{ $rata_rata_durasi > 0 ? 'Rata-rata per peminjaman' : 'Belum ada data' }}
-            </span>
+            <span class="stat-sub">{{ $rata_rata_durasi > 0 ? 'Rata-rata per peminjaman' : 'Belum ada data' }}</span>
         </div>
 
     </div>
 
-    {{-- ─── TREN PEMINJAMAN ─── --}}
+    <div class="ai-forecast-grid">
+
+        <div class="stat-card green">
+            <div class="stat-top">
+                <div class="stat-label-tag green">Forecast AI Okupansi Hari Kerja Berikutnya</div>
+                <div class="stat-icon green">AI</div>
+            </div>
+            <span class="stat-value">
+                @if($selected_room && $aiRoomSummary)
+                    {{ number_format($aiRoomSummary->predicted_occupancy_rate * 100, 1) }}<small>%</small>
+                @else
+                    -
+                @endif
+            </span>
+            <span class="stat-sub">
+                {{ $selected_room && $aiRoomSummary ? 'Prediksi tingkat keterpakaian ruangan' : 'Pilih ruangan dan jalankan analisis AI' }}
+            </span>
+        </div>
+
+        <div class="stat-card blue">
+            <div class="stat-top">
+                <div class="stat-label-tag blue">Prediksi Slot Hari Kerja Berikutnya</div>
+                <div class="stat-icon blue">↗</div>
+            </div>
+            <span class="stat-value">
+                @if($selected_room && $aiRoomSummary)
+                    {{ $aiRoomSummary->predicted_used_slot }}<small>/{{ $aiRoomSummary->total_slot }}</small>
+                @else
+                    -
+                @endif
+            </span>
+            <span class="stat-sub">Jumlah slot yang diprediksi terpakai</span>
+        </div>
+
+        <div class="stat-card teal">
+            <div class="stat-top">
+                <div class="stat-label-tag teal">Jam Terpadat AI</div>
+                <div class="stat-icon teal">⏱</div>
+            </div>
+            <span class="stat-value" style="font-size:1.4rem; line-height:1.3;">
+                @if($selected_room && $aiRoomSummary && $aiRoomSummary->predicted_peak_hour !== null)
+                    {{ $aiRoomSummary->predicted_peak_hour }}.30
+                @else
+                    -
+                @endif
+            </span>
+            <span class="stat-sub">
+                Probabilitas:
+                {{ $selected_room && $aiRoomSummary && $aiRoomSummary->peak_hour_probability !== null ? number_format($aiRoomSummary->peak_hour_probability * 100, 1) . '%' : '-' }}
+            </span>
+        </div>
+
+        <div class="stat-card {{ $aiStatus === 'tinggi' ? 'red' : ($aiStatus === 'sedang' ? 'orange' : 'green') }}">
+            <div class="stat-top">
+                <div class="stat-label-tag {{ $aiStatus === 'tinggi' ? 'red' : ($aiStatus === 'sedang' ? 'orange' : 'green') }}">Status AI</div>
+                <div class="stat-icon {{ $aiStatus === 'tinggi' ? 'red' : ($aiStatus === 'sedang' ? 'orange' : 'green') }}">●</div>
+            </div>
+            <span class="stat-value" style="font-size:1.35rem; color: {{ $aiStatusColor }};">
+                {{ $selected_room && $aiRoomSummary ? ucfirst($aiRoomSummary->predicted_occupancy_status ?? 'rendah') : '-' }}
+            </span>
+            <span class="stat-sub">Update AI: {{ $aiUpdateText }}</span>
+        </div>
+
+    </div>
+
+    <div class="charts-row">
+
+        <div class="card">
+            <div class="card-title">🤖 Forecasting Slot Hari Kerja Berikutnya AI</div>
+            <div class="card-subtitle">
+                Probabilitas keterpakaian setiap slot UNTUK HARI KERJA BERIKUTNYA
+                @if($selected_room) — {{ $selected_room->name }} @endif
+            </div>
+
+            @if($selected_room && $aiRoomSlots->count() > 0)
+                <div class="chart-container-sm">
+                    <canvas id="aiSlotChart"></canvas>
+                </div>
+            @else
+                <div class="empty-state">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                    <p>{{ $selected_room ? 'Belum ada output forecasting AI untuk ruangan ini' : 'Pilih ruangan untuk melihat forecasting AI' }}</p>
+                </div>
+            @endif
+        </div>
+
+        <div class="card">
+            <div class="card-title">🚨 Anomali Penggunaan Ruangan</div>
+            <div class="card-subtitle">
+                Pola penggunaan tidak biasa berdasarkan Isolation Forest
+                @if($selected_room) — {{ $selected_room->name }} @endif
+            </div>
+
+            @if($aiRoomAnomalies->count() > 0)
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Ruangan</th>
+                                <th>Total</th>
+                                <th>Okupansi</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($aiRoomAnomalies as $anomaly)
+                                <tr>
+                                    <td class="muted" style="white-space:nowrap;">
+                                        {{ \Carbon\Carbon::parse($anomaly->date)->isoFormat('D MMM YYYY') }}
+                                    </td>
+                                    <td class="room-name">{{ $anomaly->room_name }}</td>
+                                    <td>{{ $anomaly->total_borrowing }}</td>
+                                    <td>{{ number_format($anomaly->occupancy_rate * 100, 1) }}%</td>
+                                    <td>
+                                        <span class="badge badge-anomaly">
+                                            {{ number_format($anomaly->anomaly_score, 4) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="empty-state">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <p>Belum ada anomali ruangan yang terdeteksi</p>
+                </div>
+            @endif
+        </div>
+
+    </div>
+
     <div class="card trend-card">
         <div class="trend-card-header">
             <div>
-                <div class="card-title">Tren Peminjaman Ruangan</div>
+                <div class="card-title">📈 Tren Peminjaman Ruangan</div>
                 <div class="card-subtitle">Frekuensi peminjaman dalam 30 hari terakhir</div>
             </div>
         </div>
@@ -662,7 +1042,7 @@
             </div>
             <div class="chart-legend">
                 <div class="legend-item">
-                    <div class="legend-line" style="background:#4f7cff;"></div>
+                    <div class="legend-line" style="background:#2BA8A2;"></div>
                     Realisasi Peminjaman
                 </div>
             </div>
@@ -676,28 +1056,28 @@
         @endif
     </div>
 
-    {{-- ─── ROW: Donut + Distribusi Jam ─── --}}
     <div class="charts-row-wide">
 
-        {{-- Distribusi Pemakaian per Ruangan --}}
         <div class="card">
-            <div class="card-title">Distribusi Penggunaan</div>
+            <div class="card-title">🍩 Distribusi Penggunaan</div>
             <div class="card-subtitle">Berdasarkan Ruangan (30 Hari Terakhir)</div>
 
             @if($roomUsage->count() > 0)
                 <div class="chart-container-xs" style="display:flex; align-items:center; justify-content:center;">
                     <canvas id="donutChart"></canvas>
                 </div>
+
                 <div class="donut-legend">
                     @foreach($roomUsage->take(5) as $i => $room)
                         @php
-                            $pct   = $totalRoomUsage > 0 ? round(($room['total'] / $totalRoomUsage) * 100, 1) : 0;
+                            $pct = $totalRoomUsage > 0 ? round(($room['total'] / $totalRoomUsage) * 100, 1) : 0;
                             $color = $donutColors[$i % count($donutColors)];
                         @endphp
+
                         <div class="donut-legend-row">
                             <div class="donut-legend-left">
                                 <div class="donut-dot" style="background:{{ $color }};"></div>
-                                {{ Str::limit($room['name'], 18) }}
+                                {{ \Illuminate\Support\Str::limit($room['name'], 18) }}
                             </div>
                             <div class="donut-bar-wrap">
                                 <div class="donut-bar-fill" style="width:{{ $pct }}%; background:{{ $color }};"></div>
@@ -716,23 +1096,23 @@
             @endif
         </div>
 
-        {{-- Distribusi Jam Penggunaan --}}
         <div class="card">
-            <div class="card-title">Distribusi Jam Penggunaan</div>
+            <div class="card-title">⏰ Distribusi Jam Penggunaan</div>
             <div class="card-subtitle">Pola Frekuensi Peminjaman per Jam</div>
 
             @if($selected_room && isset($timeSlotLabels) && count($timeSlotLabels) > 0 && array_sum($timeSlotData) > 0)
                 <div class="ts-legend">
                     <div class="ts-legend-item">
-                        <div class="ts-legend-dot" style="background:#f59e0b;"></div> Jam Terpadat
+                        <div class="ts-legend-dot" style="background:#FFD23F;"></div> Jam Terpadat
                     </div>
                     <div class="ts-legend-item">
-                        <div class="ts-legend-dot" style="background:#4f7cff;"></div> Jam Aktif
+                        <div class="ts-legend-dot" style="background:#2BA8A2;"></div> Jam Aktif
                     </div>
                     <div class="ts-legend-item">
-                        <div class="ts-legend-dot" style="background:#2d3f5c;"></div> Jam Sepi
+                        <div class="ts-legend-dot" style="background:#CFE6E4;"></div> Jam Sepi
                     </div>
                 </div>
+
                 <div class="chart-container-sm">
                     <canvas id="timeSlotChart"></canvas>
                 </div>
@@ -748,12 +1128,10 @@
 
     </div>
 
-    {{-- ─── ROW: Kepadatan per Hari + Riwayat Peminjaman ─── --}}
     <div class="charts-row">
 
-        {{-- Kepadatan per Hari --}}
         <div class="card">
-            <div class="card-title">Kepadatan per Hari</div>
+            <div class="card-title">📅 Kepadatan per Hari</div>
             <div class="card-subtitle">
                 Distribusi Sesi dalam Seminggu
                 @if($selected_room) — {{ $selected_room->name }} @endif
@@ -774,11 +1152,10 @@
             @endif
         </div>
 
-        {{-- Riwayat Peminjaman Terbaru --}}
         <div class="card" style="overflow:auto;">
-            <div class="card-title">Riwayat Peminjaman Terbaru</div>
+            <div class="card-title">📋 Riwayat Peminjaman Terbaru</div>
             <div class="card-subtitle">
-                5 Transaksi Terakhir
+                5 Transaksi Completed Terakhir
                 @if($selected_room) — {{ $selected_room->name }} @endif
             </div>
 
@@ -797,9 +1174,10 @@
                         <tbody>
                             @foreach($recentBorrowings as $b)
                             @php
-                                $sKey   = strtolower($b->status ?? '');
-                                $sInfo  = $statusMap[$sKey] ?? ['label' => ucfirst($sKey), 'icon' => '•', 'class' => 'badge-pending'];
+                                $sKey = strtolower($b->status ?? '');
+                                $sInfo = $statusMap[$sKey] ?? ['label' => ucfirst($sKey), 'icon' => '•', 'class' => 'badge-pending'];
                             @endphp
+
                             <tr>
                                 <td class="room-name">{{ $b->room->name ?? '-' }}</td>
                                 <td class="muted">{{ $b->user->name ?? '-' }}</td>
@@ -825,7 +1203,7 @@
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                         <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
                     </svg>
-                    <p>Belum ada riwayat peminjaman</p>
+                    <p>Belum ada riwayat peminjaman completed</p>
                 </div>
             @endif
         </div>
@@ -838,22 +1216,73 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-    Chart.defaults.color      = '#6b7a99';
+    Chart.defaults.color = '#5F8481';
     Chart.defaults.font.family = "'Inter', sans-serif";
-    Chart.defaults.font.size   = 12;
+    Chart.defaults.font.size = 12;
 
-    const gridColor = 'rgba(255,255,255,0.05)';
-    const tickColor = '#4a5568';
+    const gridColor = 'rgba(43,168,162,0.08)';
+    const tickColor = '#7C9D9A';
 
-    // ─────────────────────────────────────────
-    // CHART 1: Tren Peminjaman
-    // ─────────────────────────────────────────
+    @if($selected_room && $aiRoomSlots->count() > 0)
+    (function() {
+        const labels = {!! json_encode($aiSlotLabels) !!};
+        const data = {!! json_encode($aiSlotProbabilities) !!};
+
+        new Chart(document.getElementById('aiSlotChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Probabilitas Terpakai (%)',
+                    data: data,
+                    backgroundColor: data.map(v => v >= 75 ? '#EF6C4A' : (v >= 50 ? '#2BA8A2' : '#CFE6E4')),
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.8,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1E8C86',
+                        titleColor: '#FFF8E7',
+                        bodyColor: '#E8F6F5',
+                        borderColor: 'rgba(255,255,255,0.18)',
+                        borderWidth: 1,
+                        padding: 10,
+                        cornerRadius: 10,
+                        callbacks: { label: ctx => ` ${ctx.raw}% kemungkinan terpakai` }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: gridColor },
+                        ticks: { color: tickColor, callback: value => value + '%' },
+                        border: { display: false }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 9 }, maxRotation: 0, color: tickColor },
+                        border: { display: false }
+                    }
+                }
+            }
+        });
+    })();
+    @endif
+
     @if($selected_room && array_sum($chartData) > 0)
     (function() {
-        const ctx  = document.getElementById('mainChart').getContext('2d');
+        const ctx = document.getElementById('mainChart').getContext('2d');
         const grad = ctx.createLinearGradient(0, 0, 0, 280);
-        grad.addColorStop(0, 'rgba(79,124,255,0.18)');
-        grad.addColorStop(1, 'rgba(79,124,255,0)');
+        grad.addColorStop(0, 'rgba(43,168,162,0.20)');
+        grad.addColorStop(1, 'rgba(43,168,162,0)');
 
         new Chart(ctx, {
             type: 'line',
@@ -862,13 +1291,13 @@
                 datasets: [{
                     label: 'Peminjaman',
                     data: {!! json_encode($chartData) !!},
-                    borderColor: '#4f7cff',
+                    borderColor: '#2BA8A2',
                     borderWidth: 2.5,
                     backgroundColor: grad,
                     fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: '#4f7cff',
-                    pointBorderColor: '#0d1117',
+                    pointBackgroundColor: '#2BA8A2',
+                    pointBorderColor: '#FFFFFF',
                     pointBorderWidth: 2,
                     pointRadius: 4,
                     pointHoverRadius: 6,
@@ -881,13 +1310,13 @@
                 plugins: {
                     legend: { display: false },
                     tooltip: {
-                        backgroundColor: '#1c2333',
-                        titleColor: '#e8edf5',
-                        bodyColor: '#6b7a99',
-                        borderColor: '#252d3d',
+                        backgroundColor: '#1E8C86',
+                        titleColor: '#FFF8E7',
+                        bodyColor: '#E8F6F5',
+                        borderColor: 'rgba(255,255,255,0.18)',
                         borderWidth: 1,
                         padding: 10,
-                        cornerRadius: 8,
+                        cornerRadius: 10,
                         callbacks: { label: ctx => ` ${ctx.raw} peminjaman` }
                     }
                 },
@@ -909,14 +1338,11 @@
     })();
     @endif
 
-    // ─────────────────────────────────────────
-    // CHART 2: Donut – Distribusi per Ruangan
-    // ─────────────────────────────────────────
     @if($roomUsage->count() > 0)
     (function() {
-        const roomNames  = {!! json_encode($roomUsage->take(5)->pluck('name')->values()) !!};
+        const roomNames = {!! json_encode($roomUsage->take(5)->pluck('name')->values()) !!};
         const roomTotals = {!! json_encode($roomUsage->take(5)->pluck('total')->values()) !!};
-        const colors     = {!! json_encode(array_slice($donutColors, 0, $roomUsage->take(5)->count())) !!};
+        const colors = {!! json_encode(array_slice($donutColors, 0, $roomUsage->take(5)->count())) !!};
 
         new Chart(document.getElementById('donutChart'), {
             type: 'doughnut',
@@ -925,7 +1351,7 @@
                 datasets: [{
                     data: roomTotals,
                     backgroundColor: colors,
-                    borderColor: '#161b27',
+                    borderColor: '#FFFFFF',
                     borderWidth: 3,
                     hoverBorderWidth: 0,
                     hoverOffset: 8,
@@ -938,13 +1364,13 @@
                 plugins: {
                     legend: { display: false },
                     tooltip: {
-                        backgroundColor: '#1c2333',
-                        titleColor: '#e8edf5',
-                        bodyColor: '#6b7a99',
-                        borderColor: '#252d3d',
+                        backgroundColor: '#1E8C86',
+                        titleColor: '#FFF8E7',
+                        bodyColor: '#E8F6F5',
+                        borderColor: 'rgba(255,255,255,0.18)',
                         borderWidth: 1,
                         padding: 10,
-                        cornerRadius: 8,
+                        cornerRadius: 10,
                         callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} peminjaman` }
                     }
                 }
@@ -953,20 +1379,17 @@
     })();
     @endif
 
-    // ─────────────────────────────────────────
-    // CHART 3: Bar – Distribusi Jam
-    // ─────────────────────────────────────────
     @if($selected_room && isset($timeSlotLabels) && array_sum($timeSlotData) > 0)
     (function() {
-        const labels   = {!! json_encode($timeSlotLabels) !!};
-        const data     = {!! json_encode($timeSlotData) !!};
+        const labels = {!! json_encode($timeSlotLabels) !!};
+        const data = {!! json_encode($timeSlotData) !!};
         const peakHour = {{ $timeSlotPeakHour ?? 'null' }};
 
         const colors = labels.map((label, i) => {
-            const h = parseInt(label.split(':')[0]);
-            if (peakHour !== null && h === peakHour) return '#f59e0b';
-            if (data[i] > 0) return '#4f7cff';
-            return '#2d3f5c';
+            const h = parseInt(label.split('.')[0]);
+            if (peakHour !== null && h === peakHour) return '#FFD23F';
+            if (data[i] > 0) return '#2BA8A2';
+            return '#CFE6E4';
         });
 
         new Chart(document.getElementById('timeSlotChart'), {
@@ -977,7 +1400,7 @@
                     label: 'Peminjaman',
                     data: data,
                     backgroundColor: colors,
-                    borderRadius: 5,
+                    borderRadius: 6,
                     borderSkipped: false,
                     barPercentage: 0.6,
                     categoryPercentage: 0.8,
@@ -989,16 +1412,16 @@
                 plugins: {
                     legend: { display: false },
                     tooltip: {
-                        backgroundColor: '#1c2333',
-                        titleColor: '#e8edf5',
-                        bodyColor: '#6b7a99',
-                        borderColor: '#252d3d',
+                        backgroundColor: '#1E8C86',
+                        titleColor: '#FFF8E7',
+                        bodyColor: '#E8F6F5',
+                        borderColor: 'rgba(255,255,255,0.18)',
                         borderWidth: 1,
                         padding: 10,
-                        cornerRadius: 8,
+                        cornerRadius: 10,
                         callbacks: {
                             label: ctx => {
-                                const h   = parseInt(ctx.label.split(':')[0]);
+                                const h = parseInt(ctx.label.split('.')[0]);
                                 const tag = (peakHour !== null && h === peakHour) ? ' ⭐ Jam Terpadat' : '';
                                 return ` ${ctx.raw} peminjaman${tag}`;
                             }
@@ -1023,9 +1446,6 @@
     })();
     @endif
 
-    // ─────────────────────────────────────────
-    // CHART 4: Bar – Kepadatan per Hari
-    // ─────────────────────────────────────────
     @if(array_sum($dayTotals) > 0)
     (function() {
         new Chart(document.getElementById('dayChart'), {
@@ -1035,8 +1455,8 @@
                 datasets: [{
                     label: 'Jumlah Peminjaman',
                     data: {!! json_encode(array_values($dayTotals)) !!},
-                    backgroundColor: 'rgba(45,212,191,0.80)',
-                    borderRadius: 5,
+                    backgroundColor: 'rgba(93,173,226,0.85)',
+                    borderRadius: 6,
                     borderSkipped: false,
                     barPercentage: 0.55,
                     categoryPercentage: 0.8,
@@ -1048,13 +1468,13 @@
                 plugins: {
                     legend: { display: false },
                     tooltip: {
-                        backgroundColor: '#1c2333',
-                        titleColor: '#e8edf5',
-                        bodyColor: '#6b7a99',
-                        borderColor: '#252d3d',
+                        backgroundColor: '#1E8C86',
+                        titleColor: '#FFF8E7',
+                        bodyColor: '#E8F6F5',
+                        borderColor: 'rgba(255,255,255,0.18)',
                         borderWidth: 1,
                         padding: 10,
-                        cornerRadius: 8,
+                        cornerRadius: 10,
                         callbacks: { label: ctx => ` ${ctx.raw} peminjaman` }
                     }
                 },
@@ -1076,19 +1496,15 @@
     })();
     @endif
 
-    // ─────────────────────────────────────────
-    // CUSTOM ROOM DROPDOWN
-    // ─────────────────────────────────────────
     (function() {
-        const wrap  = document.getElementById('roomDropdown');
-        const menu  = document.getElementById('roomDropdownMenu');
+        const wrap = document.getElementById('roomDropdown');
+        const menu = document.getElementById('roomDropdownMenu');
         const label = document.getElementById('roomDropdownLabel');
         const input = document.getElementById('roomIdInput');
-        const form  = document.getElementById('roomForm');
+        const form = document.getElementById('roomForm');
 
         if (!wrap) return;
 
-        // Toggle buka/tutup
         wrap.addEventListener('click', function(e) {
             e.stopPropagation();
             const isOpen = menu.classList.contains('open');
@@ -1096,21 +1512,22 @@
             wrap.classList.toggle('open', !isOpen);
         });
 
-        // Pilih item
         document.querySelectorAll('.room-dropdown-item').forEach(function(item) {
             item.addEventListener('click', function(e) {
                 e.stopPropagation();
-                input.value        = this.dataset.value;
-                label.textContent  = this.textContent.trim();
+                input.value = this.dataset.value;
+                label.textContent = this.textContent.trim();
+
                 document.querySelectorAll('.room-dropdown-item').forEach(i => i.classList.remove('active'));
                 this.classList.add('active');
+
                 menu.classList.remove('open');
                 wrap.classList.remove('open');
+
                 form.submit();
             });
         });
 
-        // Tutup jika klik di luar
         document.addEventListener('click', function() {
             menu.classList.remove('open');
             wrap.classList.remove('open');

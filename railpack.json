@@ -5,9 +5,40 @@
   },
   "steps": {
     "install:python": {
+      "inputs": [
+        {
+          "local": true,
+          "include": [
+            "requirements.txt"
+          ]
+        }
+      ],
       "commands": [
-        "pip install -r requirements.txt"
+        "python -m venv /app/.venv",
+        "/app/.venv/bin/pip install --upgrade pip",
+        "/app/.venv/bin/pip install -r requirements.txt"
+      ],
+      "deployOutputs": [
+        {
+          "include": [
+            "/app/.venv"
+          ]
+        }
       ]
     }
+  },
+  "deploy": {
+    "inputs": [
+      "...",
+      {
+        "step": "install:python",
+        "include": [
+          "/app/.venv"
+        ]
+      }
+    ],
+    "paths": [
+      "/app/.venv/bin"
+    ]
   }
 }

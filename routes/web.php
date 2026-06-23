@@ -275,7 +275,13 @@ Route::middleware('auth')
         [App\Http\Controllers\Admin\AccountController::class, 'destroyAdmin']
     )->name('admin.accounts.admins.destroy');
 });
-
+Route::get('/check-php-limit', function () {
+    return response()->json([
+        'max_execution_time' => ini_get('max_execution_time'),
+        'max_input_time' => ini_get('max_input_time'),
+        'memory_limit' => ini_get('memory_limit'),
+    ]);
+});
 /*
 |--------------------------------------------------------------------------
 | ============================================

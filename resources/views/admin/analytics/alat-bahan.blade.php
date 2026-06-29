@@ -578,6 +578,28 @@
         transition: filter 0.18s, transform 0.18s, box-shadow 0.18s;
     }    
 
+    .f7-header-actions {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.75rem;
+    }
+
+    .f7-header-actions form {
+        margin: 0;
+    }
+
+    .f7-header-actions .btn-primary,
+    .f7-header-actions .f7-select {
+        width: 240px;
+    }
+
+    .btn-primary {
+        margin-top: 0;
+    }   
+
     /* ─── Responsive ─── */
     @media (max-width: 1100px) {
         .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -617,24 +639,26 @@
             <p class="f7-page-subtitle">Monitoring penggunaan alat dan bahan laboratorium</p>
         </div>
 
-        <form action="{{ route('admin.borrowings.run-ai-analysis') }}" method="POST">
-            @csrf
+        <div class="f7-header-actions">
+            <form action="{{ route('admin.borrowings.run-ai-analysis') }}" method="POST">
+                @csrf
 
-            <button type="submit" class="btn-primary">
-                Jalankan Analisis AI
-            </button>
-        </form>
+                <button type="submit" class="btn-primary">
+                    Jalankan Analisis AI
+                </button>
+            </form>
 
-        <form method="GET">
-            <select name="item_id" onchange="this.form.submit()" class="f7-select">
-                <option value="">— Pilih Alat / Bahan —</option>
-                @foreach($all_tools as $tool)
-                    <option value="{{ $tool->id }}" {{ request('item_id') == $tool->id ? 'selected' : '' }}>
-                        {{ $tool->name }}
-                    </option>
-                @endforeach
-            </select>
-        </form>
+            <form method="GET">
+                <select name="item_id" onchange="this.form.submit()" class="f7-select">
+                    <option value="">— Pilih Alat / Bahan —</option>
+                    @foreach($all_tools as $tool)
+                        <option value="{{ $tool->id }}" {{ request('item_id') == $tool->id ? 'selected' : '' }}>
+                            {{ $tool->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </form>
+        </div>
     </div>
 
     {{-- ─── Widget Statistik ─── --}}

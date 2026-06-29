@@ -240,6 +240,10 @@ Route::middleware('auth')
         [AdminBorrowingController::class, 'complete']
     )->name('admin.borrowings.complete');
 
+    Route::post('/borrowings/run-ai-analysis',
+        [AdminBorrowingController::class, 'runAiAnalysis']
+    )->name('admin.borrowings.run-ai-analysis');
+
     Route::patch('/borrowings/{borrowing}/admin-cancel',
         [AdminBorrowingController::class, 'adminCancel']
     )->name('admin.borrowings.cancel');

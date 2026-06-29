@@ -419,7 +419,7 @@ class BorrowingController extends Controller
 
             ]);
         });
-        RunAiAnalysisJob::dispatch('borrowing_completed');
+        
         return back();
     }
 
@@ -530,5 +530,13 @@ class BorrowingController extends Controller
         });
 
         return back();
+    }
+
+    public function runAiAnalysis()
+    {
+        RunAiAnalysisJob::dispatch('manual_admin_trigger');
+
+        return back()
+            ->with('success', 'Analisis AI dijalankan.');
     }
 }

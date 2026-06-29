@@ -558,6 +558,26 @@
         animation-delay: 0.24s;
     }
 
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        min-height: 46px;
+        margin-top: 0.5rem;
+        padding: 0.78rem 1.65rem;
+        background: linear-gradient(135deg, #E6D58C, #D7BD62);
+        border: 1px solid rgba(255, 255, 255, 0.75);
+        border-radius: 999px;
+        color: #43340E;
+        font-size: 0.92rem;
+        font-weight: 900;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(31, 42, 41, 0.05);
+        transition: filter 0.18s, transform 0.18s, box-shadow 0.18s;
+    }    
+
     /* ─── Responsive ─── */
     @media (max-width: 1100px) {
         .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -596,6 +616,14 @@
             <h1 class="f7-page-title">Analisis Stok Barang</h1>
             <p class="f7-page-subtitle">Monitoring penggunaan alat dan bahan laboratorium</p>
         </div>
+
+        <form action="{{ route('admin.borrowings.run-ai-analysis') }}" method="POST">
+            @csrf
+
+            <button type="submit" class="btn-primary">
+                Jalankan Analisis AI
+            </button>
+        </form>
 
         <form method="GET">
             <select name="item_id" onchange="this.form.submit()" class="f7-select">

@@ -113,7 +113,7 @@
     }
 
     .page-header {
-        z-index: 60;
+        z-index: 1;
     }
 
     .stats-grid,
@@ -754,15 +754,52 @@
         .charts-row        { grid-template-columns: 1fr; }
     }
 
-    @media (max-width: 640px) {
-        .dash-wrapper      { padding: 1.25rem 1rem; border-radius: 22px; }
-        .stats-grid        { grid-template-columns: 1fr; }
-        .ai-forecast-grid  { grid-template-columns: 1fr; }
-        .page-header       { padding: 1.35rem 1.25rem; border-radius: 24px; }
-        .page-title        { font-size: 1.65rem; }
-        .header-right      { width: 100%; }
+    @media (max-width: 768px) {
+        .dash-wrapper {
+            padding: 1.25rem 1rem;
+            border-radius: 22px;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ai-forecast-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 1.35rem 1.25rem;
+            border-radius: 24px;
+        }
+
+        .page-header > div:first-child {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .page-title {
+            font-size: 1.65rem;
+        }
+
+        .header-right {
+            width: 100%;
+            justify-content: flex-start;
+            text-align: left;
+            margin-left: 0;
+        }
+
+        .header-right form {
+            width: 100%;
+            margin-left: 0;
+        }
+
         .timestamp,
-        .room-select-wrap  { width: 100%; }
+        .room-select-wrap {
+            width: 100%;
+        }
     }
 </style>
 @endpush
